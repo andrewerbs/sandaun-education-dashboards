@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terkusu Elementray School &mdash; Sandaun School Profile</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --sd-gold:#F4A800;--sd-gold-dark:#B97400;--sd-orange:#E0651E;
+    --sd-red:#D62027;--sd-red-dark:#8E1418;
+    --sd-blue:#1C8FD1;--sd-blue-dark:#0B5C8A;
+    --sd-black:#1A1A1A;--sd-white:#FFFFFF;--png-gold:#FCD116;
+    --green:#16a34a;--amber:#d97706;--red:#dc2626;--teal:#0d9488;--pink:#ec4899;
+    --bg:#faf7f2;--card:#fff;--text:#101828;--muted:#6b7280;--border:#e7e2d9;
+    --shadow:0 2px 10px rgba(120,60,0,.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;}
+  .sd-header{position:relative;color:#fff;padding:1.8rem 1.5rem 5.5rem;overflow:hidden;text-shadow:0 1px 3px rgba(0,0,0,.35);
+    background:linear-gradient(135deg,#E0651E 0%,#C2410C 34%,#8E1418 58%,#3A1410 80%,#1A1A1A 100%);}
+  .sd-header::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(circle at 14% 26%,rgba(244,168,0,.55) 0,rgba(244,168,0,0) 38%);}
+  .sd-header::after{content:"";position:absolute;inset:0;opacity:.10;pointer-events:none;
+    background-image:radial-gradient(circle at 70% 22%,#fff 0 1.4px,transparent 2.2px),
+                     radial-gradient(circle at 84% 40%,#fff 0 1px,transparent 1.8px),
+                     radial-gradient(circle at 58% 14%,#fff 0 1.2px,transparent 2px);
+    background-size:240px 240px,200px 200px,300px 300px;}
+  .sd-header-inner{position:relative;max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:1.2rem;}
+  .sd-crest{flex:0 0 auto;width:64px;height:64px;border-radius:10px;background:#fff;padding:6px;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  .sd-crest svg{width:100%;height:100%;display:block;border-radius:4px;}
+  .sd-titleblock{flex:1;min-width:0;}
+  .sd-eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.9;font-weight:600;}
+  .sd-title{font-size:1.55rem;font-weight:800;line-height:1.2;margin-top:.15rem;}
+  .sd-subtitle{font-size:.95rem;opacity:.92;margin-top:.25rem;}
+  .sd-meta{font-size:.78rem;opacity:.8;margin-top:.4rem;}
+  .sd-stripe{height:6px;display:flex;} .sd-stripe span{flex:1;}
+  .container{max-width:1180px;margin:0 auto;padding:0 1.2rem 2rem;}
+  .big-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin:-4rem 0 1.5rem;position:relative;z-index:1;}
+  .big-card{background:var(--card);border-radius:14px;padding:1.3rem 1rem;box-shadow:var(--shadow);text-align:center;border-top:4px solid var(--sd-gold);}
+  .big-card .num{font-size:1.95rem;font-weight:800;line-height:1.1;color:var(--sd-gold-dark);}
+  .big-card .label{font-size:.78rem;color:var(--muted);margin-top:.4rem;line-height:1.35;}
+  .big-card.accent{border-top-color:var(--sd-red);} .big-card.accent .num{color:var(--sd-red);}
+  .big-card.good{border-top-color:var(--green);} .big-card.good .num{color:var(--green);}
+  .big-card.warn{border-top-color:var(--amber);} .big-card.warn .num{color:var(--amber);}
+  .big-card.bad{border-top-color:var(--red);} .big-card.bad .num{color:var(--red);}
+  .big-card.blue{border-top-color:var(--sd-blue);} .big-card.blue .num{color:var(--sd-blue-dark);}
+  .big-card.dark{border-top-color:var(--sd-black);} .big-card.dark .num{color:var(--sd-black);}
+  .section{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:1.8rem;margin-bottom:1.5rem;}
+  .section.bordered{border-left:5px solid var(--sd-red);}
+  .section.bordered-gold{border-left:5px solid var(--sd-gold);}
+  .section.bordered-blue{border-left:5px solid var(--sd-blue);}
+  .section.bordered-black{border-left:5px solid var(--sd-black);}
+  .section h2{font-size:1.2rem;font-weight:700;margin-bottom:.15rem;color:var(--sd-blue-dark);}
+  .section .lead{font-size:.93rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.55;}
+  .section h3{font-size:1rem;font-weight:600;margin:1.2rem 0 .5rem;color:var(--sd-black);}
+  .chart-wide{position:relative;height:300px;margin:1rem 0;}
+  .chart-half{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .chart-box{position:relative;height:280px;}
+  @media(max-width:700px){.chart-half{grid-template-columns:1fr;}}
+  .kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.8rem;margin:1rem 0;}
+  .kv .item{background:#fbf8f2;border:1px solid var(--border);border-radius:10px;padding:.8rem .9rem;}
+  .kv .item .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;}
+  .kv .item .v{font-size:1.05rem;font-weight:700;margin-top:.15rem;color:var(--text);}
+  .traffic{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  @media(max-width:600px){.traffic{grid-template-columns:1fr;}}
+  .tl{border-radius:12px;padding:1.05rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;}
+  .tl .dot{width:30px;height:30px;border-radius:50%;flex-shrink:0;margin-top:2px;}
+  .tl .dot.red{background:var(--red);} .tl .dot.amber{background:var(--amber);}
+  .tl .dot.green{background:var(--green);} .tl .dot.grey{background:var(--muted);}
+  .tl .info{font-size:.86rem;line-height:1.5;}
+  .tl .info strong{display:block;font-size:.92rem;margin-bottom:.15rem;color:var(--text);}
+  .tl-red{background:#fef2f2;border:1px solid #fecaca;}
+  .tl-amber{background:#fffbeb;border:1px solid #fde68a;}
+  .tl-green{background:#f0fdf4;border:1px solid #bbf7d0;}
+  .tl-grey{background:#f8fafc;border:1px solid #e2e8f0;}
+  .simple-table{width:100%;border-collapse:collapse;font-size:.88rem;margin:1rem 0;}
+  .simple-table th,.simple-table td{padding:.6rem .8rem;text-align:left;border-bottom:1px solid var(--border);}
+  .simple-table th{background:#fbf3e3;font-weight:600;color:var(--sd-red-dark);font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;}
+  .simple-table tr:hover td{background:#fdfbf7;}
+  .simple-table td.r,.simple-table th.r{text-align:right;}
+  .pill{display:inline-block;padding:.2rem .65rem;border-radius:20px;font-size:.74rem;font-weight:600;}
+  .pill-red{background:#fef2f2;color:#991b1b;} .pill-amber{background:#fef3c7;color:#92400e;}
+  .pill-green{background:#dcfce7;color:#166534;} .pill-blue{background:#e1f1fb;color:var(--sd-blue-dark);}
+  .pill-gold{background:#fdedc7;color:#8a5a00;} .pill-grey{background:#eef2f7;color:#475569;}
+  .nav-links{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 0;}
+  .nav-links a{font-size:.8rem;text-decoration:none;color:var(--sd-blue-dark);background:#eef6fb;border:1px solid #cfe6f4;border-radius:20px;padding:.3rem .8rem;font-weight:600;}
+  .nav-links a:hover{background:#dcedf7;}
+  .note{font-size:.8rem;color:var(--muted);margin-top:.6rem;line-height:1.5;}
+  .sd-footer-stripe{height:5px;display:flex;} .sd-footer-stripe span{flex:1;}
+  .sd-footer-text{text-align:center;padding:1.4rem 1rem 2rem;color:var(--muted);font-size:.8rem;}
+  .sd-footer-text strong{color:var(--sd-red-dark);}
+  /* explorer */
+  .toolbar{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;margin:1rem 0 1.2rem;}
+  .toolbar input,.toolbar select{font:inherit;padding:.55rem .8rem;border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--text);}
+  .toolbar input{flex:1;min-width:220px;}
+  .toolbar .count{font-size:.85rem;color:var(--muted);font-weight:600;}
+  table.expl{width:100%;border-collapse:collapse;font-size:.86rem;}
+  table.expl th,table.expl td{padding:.55rem .7rem;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;}
+  table.expl th{background:#fbf3e3;color:var(--sd-red-dark);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;user-select:none;position:sticky;top:0;}
+  table.expl th.r,table.expl td.r{text-align:right;}
+  table.expl tbody tr:hover{background:#fdfbf7;}
+  table.expl a{color:var(--sd-blue-dark);text-decoration:none;font-weight:600;}
+  table.expl a:hover{text-decoration:underline;}
+  .rk{display:inline-block;min-width:1.4rem;text-align:center;padding:.1rem .45rem;border-radius:6px;font-weight:700;font-size:.78rem;}
+  .rk0,.rk1{background:#dcfce7;color:#166534;} .rk2{background:#fef3c7;color:#92400e;}
+  .rk3,.rk4,.rk5,.rk6{background:#fef2f2;color:#991b1b;}
+</style>
+</head>
+<body>
+
+<header class="sd-header">
+  <div class="sd-header-inner">
+    <div class="sd-crest" aria-label="Sandaun crest">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <polygon id="sdstar" points="0,-3 0.7,-0.95 2.85,-0.95 1.1,0.35 1.75,2.4 0,1.15 -1.75,2.4 -1.1,0.35 -2.85,-0.95 -0.7,-0.95" fill="#ffffff"/>
+        </defs>
+        <polygon points="0,0 100,0 0,100" fill="#1A1A1A"/>
+        <polygon points="100,0 100,100 0,100" fill="#D62027"/>
+        <g stroke="#F4A800" stroke-width="2.6" stroke-linecap="round">
+          <line x1="32" y1="44" x2="32" y2="24"/><line x1="32" y1="44" x2="19" y2="30"/>
+          <line x1="32" y1="44" x2="45" y2="30"/><line x1="32" y1="44" x2="13" y2="40"/>
+          <line x1="32" y1="44" x2="51" y2="40"/>
+        </g>
+        <circle cx="32" cy="45" r="10" fill="#1C8FD1" stroke="#F4A800" stroke-width="2.2"/>
+        <use href="#sdstar" x="52" y="11"/><use href="#sdstar" x="66" y="17"/><use href="#sdstar" x="80" y="10"/>
+        <use href="#sdstar" x="58" y="27"/><use href="#sdstar" x="46" y="14"/><use href="#sdstar" x="73" y="26"/>
+        <g fill="none" stroke="#FCD116" stroke-width="2.4" stroke-linecap="round">
+          <path d="M64 84 q11 -2 20 -15"/><path d="M64 84 q13 1 22 -8"/><path d="M64 84 q12 5 23 -1"/>
+        </g>
+        <circle cx="62" cy="84" r="4.3" fill="#FCD116"/>
+        <path d="M58 82.5 l-6 -1 l6 -2.4 z" fill="#FCD116"/>
+      </svg>
+    </div>
+    <div class="sd-titleblock">
+      <div class="sd-eyebrow">Sandaun Province &middot; Department of Education &middot; School Profile</div>
+      <div class="sd-title">Terkusu Elementray School</div>
+      <div class="sd-subtitle">Nuku District</div>
+      <div class="sd-meta">EMIS 60B56 &bull; Elementary &bull; Nuku Rural LLG &bull; Sandaun &bull; 2025 census</div>
+    </div>
+  </div>
+</header>
+<div class="sd-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+
+<div class="container">
+
+  <div class="big-cards">
+    <div class="big-card blue"><div class="num">36</div><div class="label">Students enrolled (Prep&ndash;Grade 8)</div></div><div class="big-card"><div class="num">1</div><div class="label">Teachers (census return)</div></div><div class="big-card dark"><div class="num">36.0</div><div class="label">Pupil&ndash;teacher ratio</div></div><div class="big-card"><div class="num">1.25</div><div class="label">Gender parity index (girls per boy)</div></div><div class="big-card warn"><div class="num">2<span style="font-size:1rem;font-weight:600">/6</span></div><div class="label">Risk Index flags met</div></div>
+  </div>
+
+  <div class="section bordered-gold">
+    <h2>School profile</h2>
+    <p class="lead">Terkusu Elementray School is an operating elementary in Nuku district, Nuku Rural LLG. The figures below are drawn from the 2025 Annual School Census and the Teacher Service Commission register. They are presented descriptively; no judgements or recommendations are made on this page.</p>
+    <div class="nav-links">
+      <a href="../Sandaun_School_Explorer.html">&larr; All schools</a>
+      <a href="../Sandaun_Nuku_Deep_Dive.html">Nuku district &rarr;</a>
+      <a href="../Sandaun_School_Risk_Index.html">Risk index &rarr;</a>
+      <a href="../Sandaun_Executive_Dashboard.html">Executive &rarr;</a>
+    </div>
+  </div>
+
+  <div class="section bordered-blue">
+    <h2>Enrolment by grade</h2>
+    <p class="lead">36 students are enrolled from Prep to Grade 8 across 2 class group(s). The chart shows boys and girls at each grade.</p>
+    <div class="chart-wide"><canvas id="gradeBars"></canvas></div>
+  </div>
+
+  <div class="section bordered-gold">
+    <h2>Boys and girls</h2>
+    <p class="lead">16 boys and 20 girls are enrolled, an overall gender parity index of 1.25 (girls per boy; 1.0 is balance). The grade profile shows the boy/girl split at each level.</p>
+    <div class="chart-wide" style="height:260px"><canvas id="gpiBars"></canvas></div>
+  </div>
+
+  <div class="section bordered-black">
+    <h2>Teachers</h2>
+    <p class="lead">The census return records 1 teacher(s) at this school, a pupil&ndash;teacher ratio of 36.0.</p>
+    
+    <div class="kv">
+      <div class="item"><div class="k">On TSC register</div><div class="v">1</div></div>
+      <div class="item"><div class="k">Female / Male</div><div class="v">0 / 1 &middot; 0% female</div></div>
+      <div class="item"><div class="k">Diploma or higher</div><div class="v">0 of 1</div></div>
+      <div class="item"><div class="k">Census vs register</div><div class="v">1 / 1</div></div>
+    </div>
+    <h3>Registration status</h3>
+    <div><span class="pill pill-green">Full registration: 1</span></div>
+    <h3>Highest teaching qualification</h3>
+    <table class="simple-table"><thead><tr><th>Qualification</th><th class="r">Teachers</th></tr></thead>
+    <tbody><tr><td>Elementary Teaching Certificate</td><td class="r">1</td></tr></tbody></table>
+    <p class="note">Teacher figures are aggregate counts from the Teacher Service Commission register, matched to this school's EMIS code. No individual teacher details are published. The census return and the TSC register can differ; both are shown above.</p>
+  </div>
+
+  <div class="section bordered">
+    <h2>Infrastructure</h2>
+    <p class="lead">Classrooms, water, power and sanitation as recorded in the census return.</p>
+    
+    <div class="kv">
+      <div class="item"><div class="k">Classrooms</div><div class="v">1</div></div>
+      <div class="item"><div class="k">Permanent / Semi / Bush</div><div class="v">0 / 1 / 0</div></div>
+      <div class="item"><div class="k">Need minor / major repair</div><div class="v">1 / 0</div></div>
+      <div class="item"><div class="k">Usable toilets</div><div class="v">2</div></div>
+      <div class="item"><div class="k">Water source</div><div class="v">Bringing water from home</div></div>
+      <div class="item"><div class="k">Water available</div><div class="v">No</div></div>
+      <div class="item"><div class="k">Power</div><div class="v">Information missing</div></div>
+      <div class="item"><div class="k">Staff houses</div><div class="v">1</div></div>
+    </div>
+    <div class="chart-wide" style="height:220px"><canvas id="clsChart"></canvas></div>
+  </div>
+
+  <div class="section bordered-gold">
+    <h2>Risk Index flags</h2>
+    <p class="lead">The School Risk Index records six descriptive monitoring flags. This school meets <strong>2 of 6</strong>. The flags below are indicators drawn from census fields; they are not a quality score.</p>
+    <div class="traffic">
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Teacher gap &middot; Not flagged</strong>Pupil&ndash;teacher ratio above 40, or enrolment recorded with zero teachers.</div></div>
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>No usable toilet &middot; Not flagged</strong>No usable toilet recorded in the census return.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Critical water &middot; Flagged</strong>Water source recorded as bring-from-home, none, or not recorded.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>No power &middot; Flagged</strong>No power supply recorded.</div></div>
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Poor classrooms &middot; Not flagged</strong>Half or more classrooms are bush material or need major repair.</div></div>
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Gender imbalance &middot; Not flagged</strong>Gender parity index below 0.85 (assessed at 20+ pupils).</div></div>
+    </div>
+    <div class="chart-wide" style="height:200px"><canvas id="cmpChart"></canvas></div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="sd-footer-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+  <div class="sd-footer-text">
+    <strong>Sandaun Education &middot; School Profile</strong> &middot; 2025 Annual School Census<br>
+    <span style="font-size:.72rem;">Source: PNG NDoE 2025 Annual School Census (enrolment, infrastructure) and Teacher Service Commission register (teacher counts only). EMIS 60B56. Teacher figures are aggregate counts; no individual teacher details are published.</span>
+  </div>
+</footer>
+
+<script>
+const SD = {
+  gold:'#F4A800', goldDark:'#B97400', orange:'#E0651E',
+  red:'#D62027', redDark:'#8E1418', blue:'#1C8FD1', blueDark:'#0B5C8A',
+  black:'#1A1A1A', pngGold:'#FCD116',
+  green:'#16a34a', amber:'#d97706', alertRed:'#dc2626',
+  teal:'#0d9488', pink:'#ec4899', grey:'#94a3b8'
+};
+SD.series = [SD.gold, SD.blue, SD.red, SD.teal, SD.orange, SD.pink, SD.grey];
+Chart.defaults.font.family = "'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size = 13;
+Chart.defaults.color = '#101828';
+Chart.defaults.plugins.legend.display = false;
+
+const grades=["Prep", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8"];
+new Chart(document.getElementById('gradeBars'),{type:'bar',
+  data:{labels:grades,datasets:[
+    {label:'Boys',data:[13, 0, 3, 0, 0, 0, 0, 0, 0],backgroundColor:SD.blue,borderRadius:4,stack:'s'},
+    {label:'Girls',data:[12, 0, 8, 0, 0, 0, 0, 0, 0],backgroundColor:SD.gold,borderRadius:4,stack:'s'}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'bottom'},
+      title:{display:true,text:'Enrolment by grade (36 students)',font:{size:13,weight:'bold'}}},
+    scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{precision:0}}}}});
+new Chart(document.getElementById('gpiBars'),{type:'bar',
+  data:{labels:grades,datasets:[
+    {label:'Boys',data:[13, 0, 3, 0, 0, 0, 0, 0, 0],backgroundColor:SD.blueDark,borderRadius:4},
+    {label:'Girls',data:[12, 0, 8, 0, 0, 0, 0, 0, 0],backgroundColor:SD.red,borderRadius:4}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'bottom'},
+      title:{display:true,text:'Boys vs girls by grade',font:{size:13,weight:'bold'}}},
+    scales:{x:{grid:{display:false}},y:{ticks:{precision:0}}}}});
+
+if(document.getElementById('clsChart')){
+new Chart(document.getElementById('clsChart'),{type:'bar',
+  data:{labels:['Permanent','Semi-permanent','Bush material'],
+    datasets:[{data:[0,1,0],
+      backgroundColor:[SD.blue,SD.gold,SD.red],borderRadius:5}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Classrooms by construction type',font:{size:13,weight:'bold'}}},
+    scales:{x:{grid:{display:false},ticks:{precision:0}},y:{grid:{display:false}}}}});
+}
+new Chart(document.getElementById('cmpChart'),{type:'bar',
+  data:{labels:['This school','Nuku avg','Province avg'],datasets:[{data:[2,2.45,2.27],
+    backgroundColor:[SD.amber,SD.grey,SD.blue],borderRadius:5}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Risk flags met vs district and province average (0-6)',font:{size:13,weight:'bold'}}},
+    scales:{x:{min:0,max:6,grid:{display:false}},y:{grid:{display:false}}}}});
+</script>
+</body>
+</html>
