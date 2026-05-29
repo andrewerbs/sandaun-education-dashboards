@@ -129,7 +129,7 @@
     <div class="sd-titleblock">
       <div class="sd-eyebrow">Sandaun Province &middot; Department of Education</div>
       <div class="sd-title">Nuku District</div>
-      <div class="sd-subtitle">Structurally the hardest district &mdash; worst staffing, worst classrooms, worst feeder loss and highest overall risk; the first call on resources</div>
+      <div class="sd-subtitle">Records the most understaffing, the highest share of bush-material classrooms, the lowest feeder ratio and the highest overall risk in the province</div>
       <div class="sd-meta">524 schools &bull; 89,730 students &bull; 4 districts &bull; 2025 census</div>
     </div>
   </div>
@@ -141,14 +141,14 @@
   <div class="big-cards">
     <div class="big-card"><div class="num">155</div><div class="label">Schools in Nuku</div></div>
     <div class="big-card accent"><div class="num">25,309</div><div class="label">Students enrolled (Prep&ndash;Grade 8)</div></div>
-    <div class="big-card bad"><div class="num">64%</div><div class="label">Of Grade 2 children reach Grade 3 (worst in province)</div></div>
+    <div class="big-card bad"><div class="num">64%</div><div class="label">Of Grade 2 children reach Grade 3 (lowest in province)</div></div>
     <div class="big-card bad"><div class="num">68</div><div class="label">Understaffed schools (most in province)</div></div>
   </div>
 
   <!-- NAV -->
   <div class="section bordered">
-    <h2>Why Nuku is the first call on resources</h2>
-    <p class="lead">Nuku is the structural pinch-point of Sandaun. It carries the worst staffing (68 understaffed schools, median PTR 37.6), the worst classrooms (37% bush material &mdash; bush rooms outnumber permanent ones), the worst feeder loss at the Grade 2&rarr;Grade 3 seam (64%, against a province average of 70%), and the highest overall risk (74 schools at three or more flags, average risk 2.43). When the Board allocates teachers, houses and classroom rebuilds, Nuku should be first in line.</p>
+    <h2>Nuku at a glance</h2>
+    <p class="lead">Nuku records the largest gaps in Sandaun on staffing and classrooms. It carries the most understaffing (68 understaffed schools, median PTR 37.6), the highest share of bush-material classrooms (37% &mdash; bush rooms outnumber permanent ones), the lowest feeder ratio at the Grade 2&rarr;Grade 3 seam (64%, against a province average of 70%), and the highest overall risk (74 schools at three or more flags, average risk 2.43).</p>
     <div class="nav-links">
       <a href="Sandaun_Executive_Dashboard.html">&uarr; Executive</a>
       <a href="Sandaun_Aitape_Lumi_Deep_Dive.html">Aitape/Lumi &rarr;</a>
@@ -161,15 +161,15 @@
   <!-- ENROLMENT -->
   <div class="section bordered-blue">
     <h2>How many children, and in which grades?</h2>
-    <p class="lead">Nuku starts with the second-largest Prep cohort in the province (6,097) but loses children faster than anywhere else. By Grade 3 enrolment has already fallen to 2,473 &mdash; the early-grade bulge collapses early and hard.</p>
+    <p class="lead">Nuku starts with the second-largest Prep cohort in the province (6,097) but loses children faster than anywhere else. By Grade 3 enrolment has already fallen to 2,473 &mdash; enrolment narrows sharply by Grade 3.</p>
     <div class="chart-wide"><canvas id="gradeBars"></canvas></div>
   </div>
 
   <!-- TRANSITION -->
   <div class="section bordered">
     <h2>Where do children leave between grades?</h2>
-    <p class="lead">Each bar is the share of one grade&rsquo;s children who appear in the next grade. The Grade 2&rarr;Grade 3 step is highlighted in red. In Nuku that step is 64% &mdash; the worst in the province, with a feeder ratio of roughly 24% between elementary and primary schools. This single seam is where the district haemorrhages children.</p>
-    <div class="callout"><div class="big">G2&rarr;G3 = 64%</div><p>The worst transition in Sandaun &mdash; 1,377 children lost between Grade 2 (3,850) and Grade 3 (2,473) in a single step. The feeder ratio between elementary and primary schools is about 24%.</p></div>
+    <p class="lead">Each bar is the share of one grade&rsquo;s children who appear in the next grade. The Grade 2&rarr;Grade 3 step is highlighted in red. In Nuku that step is 64% &mdash; the lowest in the province, with a feeder ratio of roughly 24% between elementary and primary schools. This single seam is where the district loses the most children.</p>
+    <div class="callout"><div class="big">G2&rarr;G3 = 64%</div><p>The lowest transition in Sandaun &mdash; 1,377 children lost between Grade 2 (3,850) and Grade 3 (2,473) in a single step. The feeder ratio between elementary and primary schools is about 24%.</p></div>
     <div class="chart-wide"><canvas id="transBars"></canvas></div>
     <p style="font-size:.82rem;color:var(--muted);margin-top:.4rem;">The G7&rarr;G8 bar above 100% is a synthetic-cohort artefact &mdash; re-entry, repetition or in-migration recorded in a single census year &mdash; not real growth.</p>
   </div>
@@ -177,7 +177,7 @@
   <!-- GPI -->
   <div class="section bordered-gold">
     <h2>Do girls keep pace as grades rise?</h2>
-    <p class="lead">The gender parity index sits below the province line from the start and slides to 0.72 by Grade 8. In Nuku the gender gap rides on top of the heaviest dropout, so girls are lost at the worst point in the system.</p>
+    <p class="lead">The gender parity index sits below the province line from the start and slides to 0.72 by Grade 8. In Nuku the gender gap rides on top of the heaviest dropout, so girls are lost where the cohort thins most.</p>
     <div class="chart-wide"><canvas id="gpiLine"></canvas></div>
   </div>
 
@@ -187,32 +187,21 @@
     <p class="lead">Nuku is at or near the bottom on every structural measure. The snapshot below reads against province benchmarks &mdash; the district trails on classrooms, female staffing and risk, and carries the most schools with no staff house at all.</p>
     <div class="chart-wide"><canvas id="snapBars"></canvas></div>
     <div class="traffic">
-      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Bush classrooms: 37% (worst in province)</strong>Bush-material rooms outnumber permanent ones. Children learn in rooms that flood, leak and need rebuilding.</div></div>
-      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Housing gap: 242 houses &mdash; 59 schools with none</strong>The most zero-house schools in the province. No teacher stays where there is nowhere to live.</div></div>
-      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Female teachers: 35% (below province 40%)</strong>Fewer female teachers than the province average, weakening the support girls need to stay in school.</div></div>
-      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>74 schools at 3+ risk flags &mdash; avg risk 2.43</strong>The highest average risk and the most high-risk schools in Sandaun. These are the first visits.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Bush classrooms: 37% (highest in province)</strong>Bush-material rooms outnumber permanent ones. Children learn in rooms that flood, leak and need rebuilding.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Housing gap: 242 houses &mdash; 59 schools with none</strong>The most zero-house schools in the province.</div></div>
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Female teachers: 35% (below province 40%)</strong>Fewer female teachers than the province average.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>74 schools at 3+ risk flags &mdash; avg risk 2.43</strong>The highest average risk and the most high-risk schools in Sandaun.</div></div>
     </div>
   </div>
 
   <!-- STORY TRAFFIC LIGHT -->
   <div class="section bordered">
     <h2>The Nuku story in three lights</h2>
-    <p class="lead">The hardest district on nearly every measure &mdash; staffing, classrooms, the G2&rarr;G3 seam and risk; it should be first in line for teachers, housing and classroom rebuilds.</p>
+    <p class="lead">Nuku records the largest gaps on nearly every measure &mdash; staffing, classrooms, the G2&rarr;G3 seam and risk.</p>
     <div class="traffic">
-      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Red &mdash; the structural pinch-point</strong>Worst staffing (68 understaffed, PTR 37.6), worst classrooms (37% bush), worst transition (64%) and highest risk (2.43). Nothing here is a single-fix problem.</div></div>
-      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Red &mdash; teachers have nowhere to live</strong>59 schools have no staff house &mdash; the most in the province &mdash; and the district is 242 houses short. Housing is the binding constraint on every staffing move.</div></div>
-      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Amber &mdash; girls lost at the worst point</strong>GPI of 0.72 at Grade 8 sits on top of the heaviest dropout. Female teachers (35%) are below the province average where they are needed most.</div></div>
-    </div>
-  </div>
-
-  <!-- ACTIONS -->
-  <div class="section bordered-blue">
-    <h2>Priority actions for Nuku in 2026</h2>
-    <p class="lead">Nuku is where province-level investment should land first &mdash; staff the schools, build the houses, rebuild the classrooms.</p>
-    <div class="actions">
-      <div class="action-box ops"><h4>Operations &mdash; staff the worst first</h4><p>Redeploy teachers to the 68 understaffed schools, starting with single-teacher schools carrying the heaviest loads. Target the Grade 2&rarr;Grade 3 feeder seam where loss is worst in the province.</p></div>
-      <div class="action-box res"><h4>Resources &mdash; houses &amp; classrooms</h4><p>Build staff housing at the 59 schools with none and rebuild bush-material classrooms (37% of rooms). Housing and safe rooms are the precondition for any staffing gain holding.</p></div>
-      <div class="action-box perf"><h4>Performance &mdash; track the seam</h4><p>Report the G2&rarr;G3 transition and the risk-flag count each term. Recruit and house female teachers (only 35%) and track GPI to Grade 8 in the highest-risk schools.</p></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Red &mdash; the largest structural gaps</strong>Most understaffing (68 understaffed, PTR 37.6), highest bush classrooms (37%), lowest transition (64%) and highest risk (2.43).</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Red &mdash; the largest housing gap</strong>59 schools have no staff house &mdash; the most in the province &mdash; and the district is 242 houses short.</div></div>
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Amber &mdash; girls lost where the cohort thins most</strong>GPI of 0.72 at Grade 8 sits on top of the heaviest dropout. Female teachers (35%) are below the province average.</div></div>
     </div>
   </div>
 
@@ -261,7 +250,7 @@ new Chart(document.getElementById('transBars'),{
   type:'bar',
   data:{labels:boundaries,datasets:[{data:trans,backgroundColor:transColors,borderRadius:4}]},
   options:{responsive:true,maintainAspectRatio:false,
-    plugins:{title:{display:true,text:'Grade-to-grade transition (%) — G2→G3 in red (64%, worst in province)',font:{size:13,weight:'bold'}},
+    plugins:{title:{display:true,text:'Grade-to-grade transition (%) — G2→G3 in red (64%, lowest in province)',font:{size:13,weight:'bold'}},
       tooltip:{callbacks:{label:c=>c.parsed.y.toFixed(1)+'% carry forward'}}},
     scales:{y:{suggestedMax:120,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}
 });
@@ -287,7 +276,7 @@ new Chart(document.getElementById('snapBars'),{
   data:{labels:['Bush classrooms %','Female teachers %','Schools at 3+ risk flags','Zero-house schools'],
     datasets:[
       {label:'Nuku',data:[37,35,74,59],backgroundColor:SD.red,borderRadius:5},
-      {label:'Province benchmark',data:[26,40,null,null],backgroundColor:SD.grey,borderRadius:5}
+      {label:'Province average',data:[26,40,null,null],backgroundColor:SD.grey,borderRadius:5}
     ]},
   options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{display:true,position:'bottom'},

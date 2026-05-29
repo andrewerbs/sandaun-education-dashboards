@@ -129,7 +129,7 @@
     <div class="sd-titleblock">
       <div class="sd-eyebrow">Sandaun Province &middot; Department of Education</div>
       <div class="sd-title">Gender Equity</div>
-      <div class="sd-subtitle">Where girls keep pace, where they fall away, and what the schools can do about it &mdash; for the Provincial Education Board</div>
+      <div class="sd-subtitle">Gender parity by grade and district, and its link to the teaching workforce</div>
       <div class="sd-meta">524 schools &bull; 89,730 students &bull; 4 districts &bull; 2025 census</div>
     </div>
   </div>
@@ -148,12 +148,12 @@
   <!-- THE QUESTION -->
   <div class="section bordered-gold">
     <h2>How equal is schooling for girls in Sandaun &mdash; and where does that change?</h2>
-    <p class="lead">Girls enter school almost in step with boys. By the time the few who remain reach Grade 8, one in five girls&rsquo; places has been lost relative to boys. This dashboard tracks the gender parity index (GPI &mdash; girls enrolled per boy enrolled, where 1.0 is parity) grade by grade and district by district, and links the pattern to one thing the Board can act on: who is standing at the front of the classroom.</p>
+    <p class="lead">Girls enter school almost in step with boys. By the time the few who remain reach Grade 8, one in five girls&rsquo; places has been lost relative to boys. This dashboard tracks the gender parity index (GPI &mdash; girls enrolled per boy enrolled, where 1.0 is parity) grade by grade and district by district, and links the pattern to the teaching workforce: who is standing at the front of the classroom.</p>
     <div class="traffic">
       <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Girls start near parity</strong>Prep GPI is 0.94 province-wide &mdash; close to balanced. Girls arrive at school in almost equal numbers to boys.</div></div>
-      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>The gap widens with every grade</strong>GPI slides to 0.79 by Grade 8. The loss is steepest in the upper grades, exactly where overall dropout is worst.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>The gap widens with every grade</strong>GPI slides to 0.79 by Grade 8. The loss is steepest in the upper grades, exactly where overall dropout is highest.</div></div>
       <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Districts diverge sharply</strong>Grade 8 GPI ranges from 0.87 in Vanimo/Green River down to 0.65 in Telefomin &mdash; a wide spread for one province.</div></div>
-      <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>Female teachers track retention</strong>The district with the most female teachers keeps girls best; the one with the fewest keeps them worst.</div></div>
+      <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>Female teachers track retention</strong>The district with the most female teachers has the highest girls&rsquo; retention; the one with the fewest has the lowest.</div></div>
     </div>
     <div class="nav-links">
       <a href="Sandaun_Executive_Dashboard.html">&uarr; Executive</a>
@@ -166,8 +166,8 @@
 
   <!-- PROVINCE GPI LINE -->
   <div class="section bordered">
-    <h2>Do girls keep pace as grades rise? No &mdash; they keep pace, then fall away</h2>
-    <p class="lead">Province-wide GPI starts near-balanced in Prep and declines steadily across the grades. There is no single cliff &mdash; instead a sustained drift downward, accelerating from Grade 6. The line never recovers.</p>
+    <h2>Gender parity by grade</h2>
+    <p class="lead">Province-wide GPI starts near-balanced in Prep and declines steadily across the grades. There is no single drop &mdash; instead a sustained drift downward, accelerating from Grade 6. The line never recovers.</p>
     <div class="callout"><div class="big">0.94 &rarr; 0.79</div><p>Province GPI falls from 0.94 in Prep to 0.79 by Grade 8 &mdash; a 0.16 loss in girls&rsquo; relative presence across nine grades.</p></div>
     <div class="chart-wide"><canvas id="provGpi"></canvas></div>
   </div>
@@ -175,47 +175,36 @@
   <!-- DISTRICTS DIVERGE -->
   <div class="section bordered-blue">
     <h2>Is the decline the same everywhere? No &mdash; the four districts diverge</h2>
-    <p class="lead">All four districts start close to parity in Prep. They part company in the upper grades. Vanimo/Green River holds girls best to Grade 8 (0.87); Telefomin collapses to 0.65 &mdash; the worst Grade 8 GPI in the province. The grouped bars below compare the three milestones that matter: school entry (Prep), the Grade 2&rarr;3 transition zone (Grade 3), and the exit point (Grade 8).</p>
+    <p class="lead">All four districts start close to parity in Prep. They part company in the upper grades. Vanimo/Green River has the highest Grade 8 parity (0.87); Telefomin falls to 0.65 &mdash; the lowest Grade 8 gender parity in the province. The grouped bars below compare the three milestones that matter: school entry (Prep), the Grade 2&rarr;3 transition zone (Grade 3), and the exit point (Grade 8).</p>
     <div class="chart-wide"><canvas id="distLines"></canvas></div>
     <div class="chart-wide"><canvas id="distBars"></canvas></div>
   </div>
 
   <!-- TEACHER-GENDER LINK -->
   <div class="section bordered-black">
-    <h2>What can the Board change? The schools&rsquo; teacher mix &mdash; and it tracks the gap</h2>
-    <p class="lead">Set each district&rsquo;s share of female teachers beside its Grade 8 GPI and the pattern is plain: where more women teach, more girls stay. Vanimo/Green River (41% female teachers) holds the best Grade 8 GPI; Telefomin (28% female, the lowest) has the worst. This is the one lever in the Board&rsquo;s hands.</p>
+    <h2>The teacher mix and the parity gap</h2>
+    <p class="lead">Set each district&rsquo;s share of female teachers beside its Grade 8 GPI and the pattern is plain: where more women teach, more girls stay. Vanimo/Green River (41% female teachers) holds the highest Grade 8 GPI; Telefomin (28% female, the lowest) has the lowest.</p>
     <div class="chart-wide"><canvas id="teacherLink"></canvas></div>
     <div class="traffic">
-      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Vanimo/Green River &mdash; the benchmark</strong>41% female teachers, best-in-province Grade 8 GPI of 0.87. Female teachers and girls&rsquo; retention rise together.</div></div>
-      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Telefomin &mdash; the warning</strong>28% female teachers, the lowest in the province, paired with the worst Grade 8 GPI of 0.65. The link runs both ways.</div></div>
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Vanimo/Green River</strong>41% female teachers, highest-in-province Grade 8 GPI of 0.87. Female teachers and girls&rsquo; retention rise together.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Telefomin</strong>28% female teachers, the lowest in the province, paired with the lowest Grade 8 GPI of 0.65. The link runs both ways.</div></div>
     </div>
   </div>
 
   <!-- SCORECARD TABLE -->
   <div class="section bordered-gold">
     <h2>District scorecard: retention, parity, and teacher mix together</h2>
-    <p class="lead">One table, three signals. The Grade 2&rarr;Grade 3 step (where the system loses the most children of both sexes), the Grade 8 GPI (where girls have fallen furthest behind), and the female-teacher share (the lever). Read across each row &mdash; the weakest transition, the weakest parity, and the thinnest female workforce cluster in the same districts.</p>
+    <p class="lead">One table, three signals. The Grade 2&rarr;Grade 3 step (where the system loses the most children of both sexes), the Grade 8 GPI (where girls&rsquo; relative presence is lowest), and the female-teacher share. Read across each row &mdash; the lowest transition, the lowest parity, and the thinnest female workforce cluster in the same districts.</p>
     <table class="simple-table">
       <thead><tr><th>District</th><th class="r">G2&rarr;G3</th><th class="r">G8 GPI</th><th class="r">Female teachers</th><th>Status</th></tr></thead>
       <tbody>
-        <tr><td><strong>Aitape/Lumi</strong></td><td class="r">81%</td><td class="r">0.73</td><td class="r">48%</td><td><span class="pill pill-green">Strong staffing</span> best transition &amp; most female teachers</td></tr>
-        <tr><td><strong>Nuku</strong></td><td class="r">64%</td><td class="r">0.72</td><td class="r">35%</td><td><span class="pill pill-red">Watch closely</span> weakest transition, thin female workforce</td></tr>
-        <tr><td><strong>Telefomin</strong></td><td class="r">69%</td><td class="r">0.65</td><td class="r">28%</td><td><span class="pill pill-red">Critical</span> lowest G8 GPI &amp; fewest female teachers</td></tr>
-        <tr><td><strong>Vanimo/Green River</strong></td><td class="r">69%</td><td class="r">0.87</td><td class="r">41%</td><td><span class="pill pill-green">Benchmark</span> best parity, second-most female teachers</td></tr>
+        <tr><td><strong>Aitape/Lumi</strong></td><td class="r">81%</td><td class="r">0.73</td><td class="r">48%</td><td><span class="pill pill-green">Highest staffing</span> highest transition &amp; most female teachers</td></tr>
+        <tr><td><strong>Nuku</strong></td><td class="r">64%</td><td class="r">0.72</td><td class="r">35%</td><td><span class="pill pill-amber">Watch</span> lowest transition, thin female workforce</td></tr>
+        <tr><td><strong>Telefomin</strong></td><td class="r">69%</td><td class="r">0.65</td><td class="r">28%</td><td><span class="pill pill-red">Lowest</span> lowest G8 GPI &amp; fewest female teachers</td></tr>
+        <tr><td><strong>Vanimo/Green River</strong></td><td class="r">69%</td><td class="r">0.87</td><td class="r">41%</td><td><span class="pill pill-green">Highest parity</span> highest parity, second-most female teachers</td></tr>
       </tbody>
     </table>
     <p style="font-size:.82rem;color:var(--muted);margin-top:.5rem;">Province overall: 47,668 boys and 42,062 girls enrolled (GPI &asymp; 0.88); 788 of about 2,003 teachers (40%) are female. GPI and transition are synthetic-cohort estimates from a single census year.</p>
-  </div>
-
-  <!-- ACTIONS -->
-  <div class="section bordered-blue">
-    <h2>Priority actions for 2026</h2>
-    <p class="lead">Three moves to close the gap, aligned to the Sandaun PEIP 2023&ndash;2027.</p>
-    <div class="actions">
-      <div class="action-box ops"><h4>Recruit &amp; house female teachers</h4><p>Lift the female-teacher share in Telefomin (28%) and Nuku (35%) toward the Aitape/Lumi level (48%). Posting follows housing &mdash; build and reserve staff houses so women can take up and keep these posts.</p></div>
-      <div class="action-box res"><h4>Track GPI by grade</h4><p>Report the gender parity index grade by grade in every district each census, and flag any grade where it falls below 0.80. Make retention of girls to Grade 8 a headline outcome the Board reviews annually.</p></div>
-      <div class="action-box perf"><h4>Target Nuku &amp; Telefomin</h4><p>Concentrate girls&rsquo;-retention effort where the gap is widest: Telefomin (G8 GPI 0.65) and Nuku (weakest G2&rarr;G3 transition at 64%). Pair female-teacher posting with the upper-grade dropout work already underway there.</p></div>
-    </div>
   </div>
 
 </div>

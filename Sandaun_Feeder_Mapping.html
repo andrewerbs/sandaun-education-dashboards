@@ -141,13 +141,13 @@
   <div class="big-cards">
     <div class="big-card bad"><div class="num">70%</div><div class="label">Of Grade 2 children reach Grade 3 province-wide</div></div>
     <div class="big-card blue"><div class="num">1.17</div><div class="label">Primary schools per elementary school</div></div>
-    <div class="big-card accent"><div class="num">24%</div><div class="label">Nuku G2&rarr;G3 feeder ratio &mdash; the worst seam</div></div>
+    <div class="big-card accent"><div class="num">24%</div><div class="label">Nuku G2&rarr;G3 feeder ratio &mdash; the lowest in province</div></div>
     <div class="big-card good"><div class="num">128%</div><div class="label">Telefomin feeder ratio &mdash; absorbs transfers in</div></div>
   </div>
 
-  <!-- WHY THE CLIFF IS A MAPPING PROBLEM -->
+  <!-- WHY THE DROP IS A MAPPING PROBLEM -->
   <div class="section bordered">
-    <h2>Why is the Grade 2&rarr;Grade 3 cliff a mapping problem?</h2>
+    <h2>Why is the Grade 2&rarr;Grade 3 drop a mapping problem?</h2>
     <p class="lead">In Sandaun, as across PNG, <strong>elementary</strong> schools teach Prep&ndash;Grade 2 and <strong>primary</strong> schools teach Grade 3&ndash;Grade 8. So the step from Grade 2 to Grade 3 is not just a new grade &mdash; for most children it means leaving one school and enrolling at a different one, often further away. If there is no primary school within reach of an elementary school, the child simply stops. The province has only 1.17 primary schools for every elementary school, so many elementary leavers have nowhere obvious to go.</p>
     <div class="callout"><div class="big">3,699 children lost</div><p>Only 70% of Grade 2 children appear in Grade 3 &mdash; 12,412 in Grade 2 fall to 8,713 in Grade 3. This single handover is the sharpest loss in the whole system, and it lands at the elementary&rarr;primary seam.</p></div>
     <div class="chart-wide"><canvas id="cliffBars"></canvas></div>
@@ -197,19 +197,8 @@
       </tbody>
     </table>
     <div class="traffic">
-      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Nuku &mdash; 24% feeder ratio</strong>Only a quarter of the Grade 2 cohort finds a place in a nearby primary. This is the province's structural pinch-point: not enough primary capacity at the seam.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Nuku &mdash; 24% feeder ratio</strong>Only a quarter of the Grade 2 cohort finds a place in a nearby primary. This is the lowest feeder ratio in the province: limited primary capacity at the seam.</div></div>
       <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Telefomin &mdash; 128% feeder ratio</strong>Primaries take in more than the local Grade 2 cohort because families travel in. Capacity exists, but children must move &mdash; a distance and boarding question.</div></div>
-    </div>
-  </div>
-
-  <!-- ACTIONS -->
-  <div class="section bordered-gold">
-    <h2>What should the Board do about the handover?</h2>
-    <p class="lead">Three moves close the seam between elementary and primary, in order of leverage.</p>
-    <div class="actions">
-      <div class="action-box ops"><h4>Map every elementary to a primary</h4><p>Resolve the 126 unmatched primaries first. Assign each of the province's elementary schools a named destination primary so the Board can distinguish real dropout from unrecorded transfer, and see exactly where the feeder links break.</p></div>
-      <div class="action-box res"><h4>Site new primary capacity in Nuku</h4><p>A 24% feeder ratio means most Nuku children have no primary place within reach. Prioritise new or upgraded Grade 3&ndash;8 capacity in Nuku catchments where many elementary leavers have nowhere to go.</p></div>
-      <div class="action-box perf"><h4>Transport and boarding to close distance</h4><p>Where capacity sits in hub primaries &mdash; as Telefomin's 128% shows &mdash; close the distance gap with feeder transport or boarding so a child does not stop at Grade 2 simply because the primary is too far.</p></div>
     </div>
     <div class="nav-links">
       <a href="Sandaun_Executive_Dashboard.html">&uarr; Executive</a>
@@ -244,7 +233,7 @@ Chart.defaults.font.size = 13;
 Chart.defaults.color = '#101828';
 Chart.defaults.plugins.legend.display = false;
 
-// The cliff: G2 vs G3 (elementary leavers vs primary intake)
+// The drop: G2 vs G3 (elementary leavers vs primary intake)
 new Chart(document.getElementById('cliffBars'),{
   type:'bar',
   data:{labels:['Grade 2 (elementary, leaving)','Grade 3 (primary, arriving)'],

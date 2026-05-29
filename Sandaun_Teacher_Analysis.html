@@ -151,10 +151,10 @@
     <h2>What the census says about the teaching workforce</h2>
     <p class="lead">Sandaun has 2,131 teachers spread across 521 schools that returned enrolment. The quality of the workforce is not the problem &mdash; 86% are fully qualified. The problems are distribution and conditions: too many children per teacher in Nuku and Vanimo/Green River, a registration backlog that has little to do with skill, too few women in the classroom, and nowhere for teachers to live.</p>
     <div class="traffic">
-      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>192 schools are understaffed</strong>37% of schools run more than 40 pupils per teacher. The median is 35, but the worst schools put one teacher against 150&ndash;250 children.</div></div>
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>192 schools are understaffed</strong>37% of schools run more than 40 pupils per teacher. The median is 35, but the most overloaded schools put one teacher against 150&ndash;250 children.</div></div>
       <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>The workforce is qualified</strong>86% of teachers are fully qualified (1,735). Only 216 are under- or partially-qualified. The bottleneck is registration access, not teacher quality.</div></div>
-      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Only 40% of teachers are women</strong>And it is lowest exactly where girls drop out fastest &mdash; 28% female in Telefomin, which also has the worst Grade 8 gender parity.</div></div>
-      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Teachers have nowhere to live</strong>200 schools (40%) have no staff house at all; the province is short roughly 951 houses against a one-house-per-teacher standard.</div></div>
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Only 40% of teachers are women</strong>And it is lowest exactly where girls drop out fastest &mdash; 28% female in Telefomin, which also has the lowest Grade 8 gender parity.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Staff housing</strong>200 schools (40%) have no staff house at all; the province is short roughly 951 houses against a one-house-per-teacher standard.</div></div>
     </div>
     <div class="nav-links">
       <a href="Sandaun_Executive_Dashboard.html">&uarr; Executive</a>
@@ -168,19 +168,19 @@
   <!-- ARE THERE ENOUGH TEACHERS -->
   <div class="section bordered">
     <h2>Are there enough teachers?</h2>
-    <p class="lead">For the province as a whole the median school runs 35 pupils per teacher (PTR) &mdash; close to the national target &mdash; but the mean is 42, dragged up by a long tail of overloaded schools. 192 of 521 schools (37%) exceed 40 PTR. Nuku and Vanimo/Green River carry the heaviest load; Telefomin, with the smallest schools, is the best staffed.</p>
+    <p class="lead">For the province as a whole the median school runs 35 pupils per teacher (PTR) &mdash; close to the national target &mdash; but the mean is 42, dragged up by a long tail of overloaded schools. 192 of 521 schools (37%) exceed 40 PTR. Nuku and Vanimo/Green River carry the heaviest load; Telefomin, with the smallest schools, has the lowest pupil&ndash;teacher ratio.</p>
     <div class="chart-wide"><canvas id="ptrBars"></canvas></div>
     <table class="simple-table">
       <thead><tr><th>District</th><th class="r">Schools</th><th class="r">Enrolment</th><th class="r">Teachers</th><th class="r">Median PTR</th><th class="r">Understaffed &gt;40</th><th>Status</th></tr></thead>
       <tbody>
         <tr><td><strong>Aitape/Lumi</strong></td><td class="r">119</td><td class="r">22,985</td><td class="r">600</td><td class="r">33.9</td><td class="r">35</td><td><span class="pill pill-amber">Watch</span></td></tr>
         <tr><td><strong>Nuku</strong></td><td class="r">155</td><td class="r">25,309</td><td class="r">588</td><td class="r">37.6</td><td class="r">68</td><td><span class="pill pill-red">Critical</span></td></tr>
-        <tr><td><strong>Telefomin</strong></td><td class="r">96</td><td class="r">12,401</td><td class="r">314</td><td class="r">31.8</td><td class="r">24</td><td><span class="pill pill-green">Best staffed</span></td></tr>
+        <tr><td><strong>Telefomin</strong></td><td class="r">96</td><td class="r">12,401</td><td class="r">314</td><td class="r">31.8</td><td class="r">24</td><td><span class="pill pill-green">Lowest PTR</span></td></tr>
         <tr><td><strong>Vanimo/Green River</strong></td><td class="r">151</td><td class="r">28,723</td><td class="r">630</td><td class="r">37.3</td><td class="r">65</td><td><span class="pill pill-red">Critical</span></td></tr>
         <tr><td><strong>Province</strong></td><td class="r">521</td><td class="r">89,418</td><td class="r">2,131</td><td class="r">35.3</td><td class="r">192</td><td><span class="pill pill-amber">37% over 40</span></td></tr>
       </tbody>
     </table>
-    <h3>The worst single schools &mdash; where one teacher faces a crowd</h3>
+    <h3>Schools with the highest pupil&ndash;teacher ratios</h3>
     <table class="simple-table">
       <thead><tr><th>School</th><th class="r">Enrolment</th><th class="r">Teachers</th><th class="r">PTR</th><th>Note</th></tr></thead>
       <tbody>
@@ -197,7 +197,7 @@
   <!-- ARE TEACHERS QUALIFIED -->
   <div class="section bordered-blue">
     <h2>Are teachers qualified?</h2>
-    <p class="lead">Yes &mdash; on the whole. 86% of teachers (1,735) are fully qualified, with most holding a Primary Diploma or Elementary Certificate. Only 216 teachers (11%) are under- or partially-qualified. Quality is not the binding constraint in Sandaun; getting qualified teachers registered and housed is.</p>
+    <p class="lead">86% of teachers (1,735) are fully qualified, with most holding a Primary Diploma or Elementary Certificate. Only 216 teachers (11%) are under- or partially-qualified. The gaps recorded elsewhere in this dashboard are in registration and housing rather than in qualifications.</p>
     <div class="chart-half">
       <div class="chart-box"><canvas id="qualDoughnut"></canvas></div>
       <div class="chart-box"><canvas id="mixBars"></canvas></div>
@@ -222,23 +222,23 @@
   <!-- TEACHER GENDER -->
   <div class="section bordered-gold">
     <h2>How many teachers are women &mdash; and does it matter?</h2>
-    <p class="lead">Sixty per cent of teachers are male (1,215) and 40% female (788). It matters because the share of female teachers tracks the gender parity of pupils: Telefomin has the fewest women in the classroom (28%) and the worst Grade 8 parity (GPI 0.646), while Vanimo/Green River has the most women (41%) and the best parity (GPI 0.866). Recruiting and housing female teachers is part of keeping girls in school.</p>
+    <p class="lead">Sixty per cent of teachers are male (1,215) and 40% female (788). It matters because the share of female teachers tracks the gender parity of pupils: Telefomin has the fewest women in the classroom (28%) and the lowest Grade 8 parity (GPI 0.646), while Vanimo/Green River has the most women (41%) and the highest parity (GPI 0.866).</p>
     <div class="chart-wide"><canvas id="femaleBars"></canvas></div>
     <table class="simple-table">
       <thead><tr><th>District</th><th class="r">% Female teachers</th><th class="r">Grade 8 GPI</th><th>Reading</th></tr></thead>
       <tbody>
         <tr><td><strong>Aitape/Lumi</strong></td><td class="r">48%</td><td class="r">&mdash;</td><td><span class="pill pill-green">Most women</span></td></tr>
         <tr><td><strong>Nuku</strong></td><td class="r">35%</td><td class="r">&mdash;</td><td><span class="pill pill-amber">Below average</span></td></tr>
-        <tr><td><strong>Telefomin</strong></td><td class="r">28%</td><td class="r">0.646</td><td><span class="pill pill-red">Fewest women, worst parity</span></td></tr>
-        <tr><td><strong>Vanimo/Green River</strong></td><td class="r">41%</td><td class="r">0.866</td><td><span class="pill pill-green">Best parity</span></td></tr>
+        <tr><td><strong>Telefomin</strong></td><td class="r">28%</td><td class="r">0.646</td><td><span class="pill pill-red">Fewest women, lowest parity</span></td></tr>
+        <tr><td><strong>Vanimo/Green River</strong></td><td class="r">41%</td><td class="r">0.866</td><td><span class="pill pill-green">Highest parity</span></td></tr>
       </tbody>
     </table>
   </div>
 
   <!-- HOUSING -->
   <div class="section bordered-black">
-    <h2>Where do teachers live? The housing crisis</h2>
-    <p class="lead">This is the binding constraint on staffing. Against ~2,251 teachers there are only about 1,300 houses &mdash; a shortfall of roughly 951. 200 of 500 schools (40%) have no staff house at all, and only 140 (28%) meet the one-house-per-teacher standard. No teacher will stay posted where there is nowhere to live, so housing drives both the understaffing and the registration backlog above.</p>
+    <h2>Staff housing</h2>
+    <p class="lead">Against ~2,251 teachers there are only about 1,300 houses &mdash; a shortfall of roughly 951. 200 of 500 schools (40%) have no staff house at all, and only 140 (28%) meet the one-house-per-teacher standard.</p>
     <div class="callout">
       <div class="big">~951 houses short</div>
       <p>40% of schools have zero staff houses; only 28% meet the one-house-per-teacher standard. Housing is the reason teachers do not stay in the hardest places.</p>
@@ -253,7 +253,7 @@
         <tr><td><strong>Vanimo/Green River</strong></td><td class="r">331</td><td class="r">52</td><td><span class="pill pill-red">Largest absolute gap</span></td></tr>
       </tbody>
     </table>
-    <h3>Worst individual schools &mdash; many teachers, almost no houses</h3>
+    <h3>Schools with the largest housing shortfall</h3>
     <table class="simple-table">
       <thead><tr><th>School</th><th class="r">Teachers</th><th class="r">Houses</th><th class="r">Gap</th></tr></thead>
       <tbody>
@@ -264,16 +264,6 @@
     </table>
   </div>
 
-  <!-- ACTIONS -->
-  <div class="section bordered-blue">
-    <h2>Priority actions for 2026</h2>
-    <p class="lead">Three moves would put more qualified teachers in front of more children, and keep them there.</p>
-    <div class="actions">
-      <div class="action-box ops"><h4>Deploy teachers to the overload</h4><p>Resolve the single-teacher schools above 150 pupils first (Mokweitami, Fiyak, Yeftim, Walwo) and rebalance the 192 understaffed schools in Nuku and Vanimo/Green River. Verify the Holy Trinity/Baro Primary figure on the ground &mdash; a PTR of 358 is a likely data-entry error.</p></div>
-      <div class="action-box res"><h4>Fix registration access</h4><p>Run a mobile PRC service into the 39 schools where 75%+ of teachers are provisional. These teachers are qualified and TSC-employed; the only thing missing is access to the office. This is the cheapest, fastest win.</p></div>
-      <div class="action-box perf"><h4>Build houses, recruit women</h4><p>Close the ~951-house gap starting with the 200 zero-house schools and the worst cases (Dapu, Vanimo, Aitape Primary). Tie new housing to recruiting female teachers in Telefomin and Nuku, where too few women and weak girls&rsquo; parity go together.</p></div>
-    </div>
-  </div>
 
 </div>
 
@@ -350,7 +340,7 @@ new Chart(document.getElementById('femaleBars'),{
   data:{labels:districts,datasets:[{label:'% female teachers',data:[48,35,28,41],
     backgroundColor:[SD.green,SD.amber,SD.red,SD.green],borderRadius:6}]},
   options:{responsive:true,maintainAspectRatio:false,
-    plugins:{title:{display:true,text:'Female teachers by district (%) — lowest in Telefomin, where girls’ parity is worst',font:{size:13,weight:'bold'}},
+    plugins:{title:{display:true,text:'Female teachers by district (%) — lowest in Telefomin, where girls’ parity is lowest',font:{size:13,weight:'bold'}},
       tooltip:{callbacks:{label:c=>c.parsed.y+'% female'}}},
     scales:{y:{suggestedMax:60,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}
 });

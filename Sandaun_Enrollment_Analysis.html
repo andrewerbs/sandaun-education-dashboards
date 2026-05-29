@@ -148,7 +148,7 @@
   <!-- NAV -->
   <div class="section bordered-gold">
     <h2>Reading this dashboard</h2>
-    <p class="lead">This page answers one question: of the 89,730 children counted in the 2025 census, where are they, where do we lose them, and how many make it to Grade 8? Enrolment is large at the bottom and collapses through the primary years. The numbers below are built from a single census year &mdash; transition and survival are synthetic-cohort estimates, not tracked cohorts.</p>
+    <p class="lead">This page answers one question: of the 89,730 children counted in the 2025 census, where are they, where do we lose them, and how many make it to Grade 8? Enrolment is large at the bottom and falls through the primary years. The numbers below are built from a single census year &mdash; transition and survival are synthetic-cohort estimates, not tracked cohorts.</p>
     <div class="nav-links">
       <a href="Sandaun_Executive_Dashboard.html">&uarr; Executive</a>
       <a href="Sandaun_Teacher_Analysis.html">Teachers &rarr;</a>
@@ -161,8 +161,8 @@
 
   <!-- THE SHAPE OF THE SYSTEM -->
   <div class="section bordered-blue">
-    <h2>The shape of the system: a heavy base that narrows fast</h2>
-    <p class="lead">How is enrolment distributed across the grades? Prep alone holds 18,100 children &mdash; more than a fifth of the whole system &mdash; and each grade above it is smaller than the last. The early-grade bulge is real demand: children turn up. The narrowing above Grade 2 is the system failing to hold them.</p>
+    <h2>The shape of the system: a large base that narrows through the primary grades</h2>
+    <p class="lead">How is enrolment distributed across the grades? Prep alone holds 18,100 children &mdash; more than a fifth of the whole system &mdash; and each grade above it is smaller than the last. Enrolment is largest in the early grades and narrows from Grade 2 upward.</p>
     <div class="chart-wide"><canvas id="gradeBars"></canvas></div>
     <div class="traffic">
       <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>The base is full</strong>Prep&ndash;Grade 2 hold 46,542 children &mdash; 52% of all enrolment sits in the first three grades. Demand for schooling is not the problem.</div></div>
@@ -170,16 +170,16 @@
     </div>
   </div>
 
-  <!-- THE CLIFF -->
+  <!-- THE GRADE 2 TO 3 DROP -->
   <div class="section bordered">
-    <h2>The Grade 2 &rarr; Grade 3 cliff</h2>
-    <p class="lead">Where is the sharpest loss? At every grade boundary we ask how many children carry forward. The answer is steady until Grade 2, then it falls off a cliff: only 70.2% of Grade 2 children appear in Grade 3 &mdash; the point where most children must move from an elementary school to a separate primary school.</p>
-    <div class="callout"><div class="big">3,699 children</div><p>are lost between Grade 2 (12,412) and Grade 3 (8,713) &mdash; only 70% make the step. This is the single worst transition in the system.</p></div>
+    <h2>The Grade 2 &rarr; Grade 3 transition</h2>
+    <p class="lead">Where is the sharpest loss? At every grade boundary we ask how many children carry forward. The answer is steady until Grade 2, then it falls sharply: only 70.2% of Grade 2 children appear in Grade 3 &mdash; the point where most children move from an elementary school to a separate primary school.</p>
+    <div class="callout"><div class="big">3,699 children</div><p>are lost between Grade 2 (12,412) and Grade 3 (8,713) &mdash; only 70% make the step. This is the single lowest transition in the system.</p></div>
     <div class="chart-wide"><canvas id="transBars"></canvas></div>
     <div class="traffic">
-      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Red &mdash; below 75% carry forward</strong>G1&rarr;G2 (77.4%) and G2&rarr;G3 (70.2%). The two worst steps are back to back, in the lower primary years.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Red &mdash; below 75% carry forward</strong>G1&rarr;G2 (77.4%) and G2&rarr;G3 (70.2%). The two steepest steps are back to back, in the lower primary years.</div></div>
       <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Amber &mdash; 75% to 90% carry forward</strong>Prep&rarr;G1 (88.6%), G5&rarr;G6 (89.3%). Steady leakage that compounds grade on grade.</div></div>
-      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Green &mdash; 90% or more carry forward</strong>G3&rarr;G4 (90.9%), G4&rarr;G5 (90.8%), G6&rarr;G7 (97.4%). Once children survive the cliff, upper primary holds them better.</div></div>
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Green &mdash; 90% or more carry forward</strong>G3&rarr;G4 (90.9%), G4&rarr;G5 (90.8%), G6&rarr;G7 (97.4%). After Grade 3, upper primary holds them better.</div></div>
       <div class="tl tl-gold"><div class="dot gold"></div><div class="info"><strong>Data caveat &mdash; G7&rarr;G8 reads 107.3%</strong>This exceeds 100% and is not real growth; treat it as a synthetic-cohort artefact (see the data note below).</div></div>
     </div>
   </div>
@@ -187,7 +187,7 @@
   <!-- SURVIVAL TO GRADE 8 -->
   <div class="section bordered-black">
     <h2>Survival to Grade 8: only 37% of the Prep class remains</h2>
-    <p class="lead">If we follow the Prep intake of 18,100 children up the grades, how many are still enrolled by Grade 8? Roughly 37% &mdash; 6,705 children. Almost two in three children who start school have left the system before Grade 8. The steepest part of the decline is the Grade 2&ndash;Grade 3 cliff.</p>
+    <p class="lead">If we follow the Prep intake of 18,100 children up the grades, how many are still enrolled by Grade 8? Roughly 37% &mdash; 6,705 children. Almost two in three children who start school have left the system before Grade 8. The steepest part of the decline is the Grade 2&ndash;Grade 3 drop.</p>
     <div class="chart-half">
       <div class="chart-box"><canvas id="survivalLine"></canvas></div>
       <div class="chart-box"><canvas id="indexLine"></canvas></div>
@@ -197,14 +197,14 @@
 
   <!-- DISTRICT COMPARISON -->
   <div class="section bordered-blue">
-    <h2>The cliff is not the same in every district</h2>
-    <p class="lead">Which districts lose the most children at the Grade 2&ndash;Grade 3 step? Aitape/Lumi holds 81% of its Grade 2 children into Grade 3 and is the natural benchmark. Nuku is the pinch-point at 64% &mdash; the worst transition in the province &mdash; while Telefomin and Vanimo/Green River both sit at 69%.</p>
+    <h2>The drop is not the same in every district</h2>
+    <p class="lead">Which districts lose the most children at the Grade 2&ndash;Grade 3 step? Aitape/Lumi holds the highest transition (81%) of its Grade 2 children into Grade 3. Nuku records the largest drop at 64% &mdash; the lowest transition in the province &mdash; while Telefomin and Vanimo/Green River both sit at 69%.</p>
     <div class="chart-wide"><canvas id="districtBars"></canvas></div>
     <table class="simple-table">
       <thead><tr><th>District</th><th class="r">Schools</th><th class="r">Students</th><th class="r">G2&rarr;G3</th><th>Status</th></tr></thead>
       <tbody>
-        <tr><td><strong>Aitape/Lumi</strong></td><td class="r">120</td><td class="r">20,985</td><td class="r">81%</td><td><span class="pill pill-green">Benchmark</span> best transition in the province</td></tr>
-        <tr><td><strong>Nuku</strong></td><td class="r">155</td><td class="r">25,309</td><td class="r">64%</td><td><span class="pill pill-red">Worst</span> sharpest loss at the cliff</td></tr>
+        <tr><td><strong>Aitape/Lumi</strong></td><td class="r">120</td><td class="r">20,985</td><td class="r">81%</td><td><span class="pill pill-green">Highest</span> highest transition in the province</td></tr>
+        <tr><td><strong>Nuku</strong></td><td class="r">155</td><td class="r">25,309</td><td class="r">64%</td><td><span class="pill pill-red">Lowest</span> steepest drop in the province</td></tr>
         <tr><td><strong>Telefomin</strong></td><td class="r">97</td><td class="r">12,413</td><td class="r">69%</td><td><span class="pill pill-amber">Watch</span> below province average</td></tr>
         <tr><td><strong>Vanimo/Green River</strong></td><td class="r">152</td><td class="r">31,023</td><td class="r">69%</td><td><span class="pill pill-amber">Watch</span> most students, below average</td></tr>
         <tr><td><strong>Province</strong></td><td class="r">524</td><td class="r">89,730</td><td class="r">70%</td><td><span class="pill pill-blue">Total</span> 4 districts combined</td></tr>
@@ -219,19 +219,8 @@
     <div class="traffic">
       <div class="tl tl-gold"><div class="dot gold"></div><div class="info"><strong>Re-entry and repetition</strong>Older children returning to school, or repeating Grade 8, inflate the Grade 8 count relative to Grade 7.</div></div>
       <div class="tl tl-gold"><div class="dot gold"></div><div class="info"><strong>In-migration to larger schools</strong>Children moving in for upper primary &mdash; especially in Vanimo/Green River, where Grade 8 (3,339) exceeds Grade 7 (3,266) &mdash; lift the ratio.</div></div>
-      <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>Read transitions as a pattern, not a count</strong>Use the boundaries to find the worst leaks (the cliff at G2&rarr;G3), not to count exact children moving between two specific grades.</div></div>
+      <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>Read transitions as a pattern, not a count</strong>Use the boundaries to find the steepest drops (the drop at G2&rarr;G3), not to count exact children moving between two specific grades.</div></div>
       <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>Survival is an estimate</strong>The 37% Prep&rarr;G8 figure is a cross-sectional ratio (6,705 &divide; 18,100), not a followed class &mdash; directionally robust, not exact.</div></div>
-    </div>
-  </div>
-
-  <!-- ACTIONS -->
-  <div class="section bordered">
-    <h2>What this means for retention in 2026</h2>
-    <p class="lead">The flow data points to one priority above all: hold children across the Grade 2&ndash;Grade 3 boundary, starting in Nuku where the loss is worst.</p>
-    <div class="actions">
-      <div class="action-box ops"><h4>Operations &mdash; bridge the cliff</h4><p>Target the Grade 2&rarr;Grade 3 boundary in Nuku (64%) first, then Telefomin and Vanimo/Green River (69%). Map which Grade 2 children have a primary school within reach and post staff to receive them.</p></div>
-      <div class="action-box res"><h4>Resources &mdash; follow the benchmark</h4><p>Study what Aitape/Lumi does to hold 81% across the cliff and replicate it. Concentrate support on the lower primary grades where the two worst steps (G1&rarr;G2, G2&rarr;G3) sit back to back.</p></div>
-      <div class="action-box perf"><h4>Performance &mdash; report survival</h4><p>Make Prep&rarr;Grade 8 survival (now 37%) and the G2&rarr;G3 transition the headline retention measures reported to the Board each year, by district, and watch them move.</p></div>
     </div>
   </div>
 
@@ -264,7 +253,7 @@ const totals = [18100,16030,12412,8713,7916,7186,6419,6249,6705];
 const boys   = [9311,8473,6553,4635,4267,3817,3480,3377,3755];
 const girls  = [8789,7557,5859,4078,3649,3369,2939,2872,2950];
 
-// Enrolment by grade & sex (the early-grade bulge and collapse)
+// Enrolment by grade & sex
 new Chart(document.getElementById('gradeBars'),{
   type:'bar',
   data:{labels:grades,datasets:[

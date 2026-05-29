@@ -172,7 +172,7 @@
       <div class="chart-box"><canvas id="classDoughnut"></canvas></div>
       <div class="chart-box"><canvas id="bushBars"></canvas></div>
     </div>
-    <p style="font-size:.82rem;color:var(--muted);margin-top:.5rem;">District order: Aitape/Lumi (16%), Vanimo/Green River (23%), Telefomin (31%), Nuku (37%). Nuku is the worst &mdash; bush material exceeds permanent construction there.</p>
+    <p style="font-size:.82rem;color:var(--muted);margin-top:.5rem;">District order: Aitape/Lumi (16%), Vanimo/Green River (23%), Telefomin (31%), Nuku (37%). Nuku has the highest share &mdash; bush material exceeds permanent construction there.</p>
   </div>
 
   <!-- BUILDING CONDITION -->
@@ -189,11 +189,11 @@
   <!-- WATER & SANITATION -->
   <div class="section bordered">
     <h2>Do schools have water and sanitation?</h2>
-    <p class="lead">Water is the most acute service gap. 141 schools (27%) have a critical water situation and 128 more are of concern; only 209 rely on a tank (adequate) and just 12 have piped water (good). 102 schools have no source at all and bring water from home. Worst of all, 241 schools have neither soap nor water for handwashing.</p>
+    <p class="lead">Water is the most acute service gap. 141 schools (27%) have a critical water situation and 128 more are of concern; only 209 rely on a tank (adequate) and just 12 have piped water (good). 102 schools have no source at all and bring water from home. In addition, 241 schools have neither soap nor water for handwashing.</p>
     <div class="chart-half">
       <div class="chart-box"><canvas id="waterBars"></canvas></div>
       <div>
-        <div class="callout"><div class="big">241 schools</div><p>have neither soap nor water &mdash; no means for children to wash their hands. This is the single most urgent WASH gap in the province.</p></div>
+        <div class="callout"><div class="big">241 schools</div><p>have neither soap nor water &mdash; no means for children to wash their hands. This is the largest WASH gap in the province.</p></div>
         <table class="simple-table">
           <thead><tr><th>Water status</th><th class="r">Schools</th><th>Rating</th></tr></thead>
           <tbody>
@@ -210,7 +210,7 @@
   <!-- POWER -->
   <div class="section bordered-black">
     <h2>Do schools have power?</h2>
-    <p class="lead">Solar is the workhorse of Sandaun&rsquo;s schools &mdash; 190 schools (37%) run on solar, far ahead of generator (47), basic lighting (33) or grid (13). But about 228 schools (44%) have no reliable power: 122 (24%) have none at all, and 106 (21%) returned no information &mdash; a data gap large enough that the true figure cannot be confirmed and must be treated as a flag in its own right.</p>
+    <p class="lead">Solar is the workhorse of Sandaun&rsquo;s schools &mdash; 190 schools (37%) run on solar, far ahead of generator (47), basic lighting (33) or grid (13). But about 228 schools (44%) have no reliable power: 122 (24%) have none at all, and 106 (21%) returned no information &mdash; a data gap large enough that the true figure cannot be confirmed and is treated as a flag in its own right.</p>
     <div class="chart-wide"><canvas id="powerBars"></canvas></div>
     <div class="traffic">
       <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Solar leads &mdash; 190 schools (37%)</strong>The most common and most scalable source; the natural backbone for expansion.</div></div>
@@ -220,29 +220,19 @@
 
   <!-- DISTRICT COMPARISON -->
   <div class="section bordered-blue">
-    <h2>Which district is worst on each dimension?</h2>
-    <p class="lead">Infrastructure failure is not spread evenly. Aitape/Lumi is the benchmark on construction; Nuku is the structural pinch-point, with the highest share of bush-material classrooms in the province. The table below names each district&rsquo;s standout weakness.</p>
+    <h2>District comparison by dimension</h2>
+    <p class="lead">Infrastructure gaps are not spread evenly. Aitape/Lumi records the lowest share of bush-material classrooms; Nuku the highest. The table below names each district&rsquo;s largest gap.</p>
     <table class="simple-table">
-      <thead><tr><th>District</th><th class="r">% Bush classrooms</th><th>Standout weakness</th></tr></thead>
+      <thead><tr><th>District</th><th class="r">% Bush classrooms</th><th>Largest gap</th></tr></thead>
       <tbody>
-        <tr><td><strong>Aitape/Lumi</strong></td><td class="r">16%</td><td><span class="pill pill-green">Best</span> lowest share of bush-material classrooms &mdash; the construction benchmark</td></tr>
-        <tr><td><strong>Nuku</strong></td><td class="r">37%</td><td><span class="pill pill-red">Worst</span> bush material exceeds permanent &mdash; rebuild priority</td></tr>
+        <tr><td><strong>Aitape/Lumi</strong></td><td class="r">16%</td><td><span class="pill pill-green">Lowest</span> the smallest bush-material share in the province</td></tr>
+        <tr><td><strong>Nuku</strong></td><td class="r">37%</td><td><span class="pill pill-red">Highest</span> bush material exceeds permanent</td></tr>
         <tr><td><strong>Telefomin</strong></td><td class="r">31%</td><td><span class="pill pill-amber">Watch</span> nearly a third bush material in the highlands</td></tr>
-        <tr><td><strong>Vanimo/Green River</strong></td><td class="r">23%</td><td><span class="pill pill-amber">Watch</span> below benchmark despite coastal access</td></tr>
+        <tr><td><strong>Vanimo/Green River</strong></td><td class="r">23%</td><td><span class="pill pill-amber">Watch</span> still 23% bush material despite coastal access</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- ACTIONS -->
-  <div class="section bordered-gold">
-    <h2>Priority actions for 2026</h2>
-    <p class="lead">Three moves would lift the infrastructure numbers that matter most, in priority order.</p>
-    <div class="actions">
-      <div class="action-box res"><h4>Rebuild classrooms &mdash; start in Nuku</h4><p>Target the 127 schools teaching entirely in bush material and the 196 critical-condition schools, beginning in Nuku where 37% of classrooms are bush and bush exceeds permanent. Sequence the 52 high-priority schools next.</p></div>
-      <div class="action-box ops"><h4>WASH &mdash; soap and water first</h4><p>Reach the 241 schools with neither soap nor water immediately, then the 141 critical-water schools. Convert the 102 &ldquo;bring water from home&rdquo; schools to tanks, the proven adequate standard for 209 schools already.</p></div>
-      <div class="action-box perf"><h4>Power &mdash; scale solar, close the data gap</h4><p>Extend the solar model that already serves 190 schools to the 122 with no power. First, collect power data from the 106 schools (21%) that reported none, so the 44%-unreliable figure can be confirmed.</p></div>
-    </div>
-  </div>
 
 </div>
 
@@ -286,7 +276,7 @@ new Chart(document.getElementById('bushBars'),{
     datasets:[{data:[16,37,31,23],
       backgroundColor:[SD.green,SD.red,SD.amber,SD.amber],borderRadius:5}]},
   options:{responsive:true,maintainAspectRatio:false,
-    plugins:{title:{display:true,text:'% bush-material classrooms by district — Nuku worst',font:{size:13,weight:'bold'}},
+    plugins:{title:{display:true,text:'% bush-material classrooms by district — Nuku highest',font:{size:13,weight:'bold'}},
       tooltip:{callbacks:{label:c=>c.parsed.y+'% bush material'}}},
     scales:{y:{suggestedMax:45,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}
 });
@@ -303,7 +293,7 @@ new Chart(document.getElementById('conditionBars'),{
     scales:{x:{ticks:{callback:v=>v.toLocaleString()}},y:{grid:{display:false}}}}
 });
 
-// Water status (best -> worst)
+// Water status (most to least complete)
 new Chart(document.getElementById('waterBars'),{
   type:'bar',
   data:{labels:['Good (piped)','Adequate (tank)','Of concern','Critical'],

@@ -129,7 +129,7 @@
     <div class="sd-titleblock">
       <div class="sd-eyebrow">Sandaun Province &middot; Department of Education</div>
       <div class="sd-title">School Risk Index</div>
-      <div class="sd-subtitle">Which schools are in the deepest trouble &mdash; ranked by six combined risk flags, for the Provincial Education Board</div>
+      <div class="sd-subtitle">Schools ranked by six combined risk flags, for the Provincial Education Board</div>
       <div class="sd-meta">524 schools &bull; 89,730 students &bull; 4 districts &bull; 2025 census</div>
     </div>
   </div>
@@ -141,19 +141,19 @@
   <div class="big-cards">
     <div class="big-card warn"><div class="num">211</div><div class="label">Schools carrying 3 or more risk flags (40%)</div></div>
     <div class="big-card bad"><div class="num">83</div><div class="label">Schools carrying 4 or more flags</div></div>
-    <div class="big-card accent"><div class="num">17</div><div class="label">Schools carrying 5 or more flags &mdash; crisis</div></div>
+    <div class="big-card accent"><div class="num">17</div><div class="label">Schools carrying 5 or more flags</div></div>
     <div class="big-card dark"><div class="num">4</div><div class="label">Schools carrying all 6 flags</div></div>
   </div>
 
   <!-- WHAT THIS TELLS THE BOARD -->
   <div class="section bordered-gold">
     <h2>What this index tells the Board</h2>
-    <p class="lead">This index turns the 2025 census into a single, comparable score so the Board can decide where to send people and money first. Each of 521 scored schools (520 fully matched to infrastructure) carries between zero and six risk flags. The higher the score, the more ways a school is failing its children at once &mdash; and the stronger the case for an immediate visit.</p>
+    <p class="lead">This index turns the 2025 census into a single, comparable score so the Board can decide where to send people and money first. Each of 521 scored schools (520 fully matched to infrastructure) carries between zero and six risk flags. The higher the score, the more ways a school is short of the basics at once.</p>
     <div class="traffic">
-      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>211 schools carry three or more flags</strong>Two in five schools in the province are failing on at least three of the six basics at the same time. These need a support plan, not a reminder.</div></div>
-      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>17 schools are in crisis (5+ flags)</strong>These schools are short of teachers and lack toilets, water, power and safe rooms together. They should be visited before the 2026 school year settles.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>211 schools carry three or more flags</strong>Two in five schools in the province are short of at least three of the six basics at the same time.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>17 schools record 5 or more flags</strong>These schools are short of teachers and lack toilets, water, power and safe rooms together.</div></div>
       <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Nuku carries the most risk</strong>74 of Nuku&rsquo;s 152 schools sit at 3+ flags and its average score (2.43) is the highest of the four districts.</div></div>
-      <div class="tl tl-gold"><div class="dot gold"></div><div class="info"><strong>One ghost school stands out</strong>Mapul Primary (Aitape/Lumi) reports 201 children enrolled and zero teachers &mdash; a posting failure that should be fixed this term.</div></div>
+      <div class="tl tl-gold"><div class="dot gold"></div><div class="info"><strong>One ghost school stands out</strong>Mapul Primary (Aitape/Lumi) reports 201 children enrolled and zero teachers &mdash; a posting gap.</div></div>
     </div>
     <div class="nav-links">
       <a href="Sandaun_Executive_Dashboard.html">&uarr; Executive</a>
@@ -181,19 +181,19 @@
   <!-- HOW RISK IS SPREAD -->
   <div class="section bordered">
     <h2>How is risk spread across the province?</h2>
-    <p class="lead">Most schools sit in the middle &mdash; one or two flags &mdash; but the right-hand tail is long and dangerous. 211 schools carry three or more flags and 17 carry five or more. The four schools failing every test are the sharpest end of the problem.</p>
+    <p class="lead">Most schools sit in the middle &mdash; one or two flags &mdash; but the right-hand tail is long. 211 schools carry three or more flags and 17 carry five or more. The four schools with a flag on every component are at the far end of the distribution.</p>
     <div class="chart-half">
       <div class="chart-box"><canvas id="riskBars"></canvas></div>
       <div>
         <table class="simple-table">
           <thead><tr><th>Risk band</th><th class="r">Schools</th><th>What it means</th></tr></thead>
           <tbody>
-            <tr><td><span class="pill pill-red">6 flags</span></td><td class="r">4</td><td>Failing on every basic &mdash; visit first</td></tr>
-            <tr><td><span class="pill pill-red">5 flags</span></td><td class="r">13</td><td>Crisis &mdash; visit immediately</td></tr>
-            <tr><td><span class="pill pill-amber">4 flags</span></td><td class="r">66</td><td>Severe &mdash; support plan needed</td></tr>
-            <tr><td><span class="pill pill-amber">3 flags</span></td><td class="r">128</td><td>High priority for support</td></tr>
-            <tr><td><span class="pill pill-gold">2 flags</span></td><td class="r">161</td><td>Watch list</td></tr>
-            <tr><td><span class="pill pill-green">1 flag</span></td><td class="r">121</td><td>Mostly stable, one weakness</td></tr>
+            <tr><td><span class="pill pill-red">6 flags</span></td><td class="r">4</td><td>Gaps on every component</td></tr>
+            <tr><td><span class="pill pill-red">5 flags</span></td><td class="r">13</td><td>Gaps across most components</td></tr>
+            <tr><td><span class="pill pill-amber">4 flags</span></td><td class="r">66</td><td>Gaps on four components</td></tr>
+            <tr><td><span class="pill pill-amber">3 flags</span></td><td class="r">128</td><td>Gaps on three components</td></tr>
+            <tr><td><span class="pill pill-gold">2 flags</span></td><td class="r">161</td><td>Gaps on two components</td></tr>
+            <tr><td><span class="pill pill-green">1 flag</span></td><td class="r">121</td><td>Gap on one component</td></tr>
             <tr><td><span class="pill pill-green">0 flags</span></td><td class="r">28</td><td>Passes all six tests</td></tr>
           </tbody>
         </table>
@@ -221,10 +221,10 @@
     </table>
   </div>
 
-  <!-- THE 15 SCHOOLS TO VISIT FIRST -->
+  <!-- THE 15 HIGHEST-SCORING SCHOOLS -->
   <div class="section bordered">
-    <h2>The 15 schools to visit first</h2>
-    <p class="lead">These are the highest-scoring schools in the province &mdash; the four that fail every test, followed by the worst of the five-flag schools. Almost all are elementary schools with one or two teachers against more children than they can teach. The flag list shows exactly what each school needs.</p>
+    <h2>The 15 highest-scoring schools</h2>
+    <p class="lead">These are the highest-scoring schools in the province &mdash; the four that fail every test, followed by the highest of the five-flag schools. Almost all are elementary schools with one or two teachers against more children than they can teach. The flag list shows the recorded gaps at each school.</p>
     <table class="simple-table">
       <thead><tr><th>School</th><th>District</th><th>Type</th><th class="r">Enrol</th><th class="r">Teachers</th><th class="r">PTR</th><th class="r">Risk</th><th>Flags</th></tr></thead>
       <tbody>
@@ -247,18 +247,7 @@
     </table>
     <div class="callout callout-gold">
       <div class="big">Mapul Primary &mdash; 201 children, 0 teachers</div>
-      <p>A &ldquo;ghost school&rdquo; in Aitape/Lumi: 201 children are enrolled but no teacher is posted. This is a posting failure, not a building problem, and can be fixed with a redeployment letter this term.</p>
-    </div>
-  </div>
-
-  <!-- ACTIONS -->
-  <div class="section bordered-blue">
-    <h2>What the Board should do next</h2>
-    <p class="lead">Three moves follow directly from the index &mdash; act on the worst schools, fix the ghost-school posting, and sequence the rest of the support by the flag type that dominates each school.</p>
-    <div class="actions">
-      <div class="action-box ops"><h4>Visit the top 17 immediately</h4><p>Send a district officer to every school carrying five or more flags before the 2026 year settles. These 17 schools, led by the four at the full six, are failing on teachers and buildings at once and cannot wait for the normal cycle.</p></div>
-      <div class="action-box res"><h4>Fix the Mapul posting now</h4><p>Resolve the Mapul Primary ghost school (201 enrolled, 0 teachers) with a redeployment letter this term. It is the single cheapest fix on this list &mdash; no construction, just a teacher posted to children already showing up.</p></div>
-      <div class="action-box perf"><h4>Sequence support by flag type</h4><p>Group the 211 high-risk schools by their dominant flag: post teachers where the gap is staffing, build toilets and tanks where the gap is water and sanitation, and target female-teacher housing where gender imbalance drives the score.</p></div>
+      <p>A &ldquo;ghost school&rdquo; in Aitape/Lumi: 201 children are enrolled but no teacher is posted. This is a posting gap, not a building problem.</p>
     </div>
   </div>
 
