@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sandaun — Teacher Analysis</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --sd-gold:#F4A800;--sd-gold-dark:#B97400;--sd-orange:#E0651E;
+    --sd-red:#D62027;--sd-red-dark:#8E1418;
+    --sd-blue:#1C8FD1;--sd-blue-dark:#0B5C8A;
+    --sd-black:#1A1A1A;--sd-white:#FFFFFF;--png-gold:#FCD116;
+    --green:#16a34a;--amber:#d97706;--red:#dc2626;--teal:#0d9488;--pink:#ec4899;
+    --bg:#faf7f2;--card:#fff;--text:#101828;--muted:#6b7280;--border:#e7e2d9;
+    --shadow:0 2px 10px rgba(120,60,0,.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;}
+  .sd-header{position:relative;color:#fff;padding:1.8rem 1.5rem 5.5rem;overflow:hidden;text-shadow:0 1px 3px rgba(0,0,0,.35);
+    background:linear-gradient(135deg,#E0651E 0%,#C2410C 34%,#8E1418 58%,#3A1410 80%,#1A1A1A 100%);}
+  .sd-header::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(circle at 14% 26%,rgba(244,168,0,.55) 0,rgba(244,168,0,0) 38%);}
+  .sd-header::after{content:"";position:absolute;inset:0;opacity:.10;pointer-events:none;
+    background-image:radial-gradient(circle at 70% 22%,#fff 0 1.4px,transparent 2.2px),
+                     radial-gradient(circle at 84% 40%,#fff 0 1px,transparent 1.8px),
+                     radial-gradient(circle at 58% 14%,#fff 0 1.2px,transparent 2px);
+    background-size:240px 240px,200px 200px,300px 300px;}
+  .sd-header-inner{position:relative;max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:1.2rem;}
+  .sd-crest{flex:0 0 auto;width:64px;height:64px;border-radius:10px;background:#fff;padding:6px;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  .sd-crest svg{width:100%;height:100%;display:block;border-radius:4px;}
+  .sd-titleblock{flex:1;min-width:0;}
+  .sd-eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.9;font-weight:600;}
+  .sd-title{font-size:1.55rem;font-weight:800;line-height:1.2;margin-top:.15rem;}
+  .sd-subtitle{font-size:.95rem;opacity:.92;margin-top:.25rem;}
+  .sd-meta{font-size:.78rem;opacity:.8;margin-top:.4rem;}
+  .sd-stripe{height:6px;display:flex;} .sd-stripe span{flex:1;}
+  .container{max-width:1180px;margin:0 auto;padding:0 1.2rem 2rem;}
+  .big-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:-4rem 0 1.5rem;position:relative;z-index:1;}
+  .big-card{background:var(--card);border-radius:14px;padding:1.4rem 1.2rem;box-shadow:var(--shadow);text-align:center;border-top:4px solid var(--sd-gold);}
+  .big-card .num{font-size:2.1rem;font-weight:800;line-height:1.1;color:var(--sd-gold-dark);}
+  .big-card .label{font-size:.82rem;color:var(--muted);margin-top:.4rem;line-height:1.35;}
+  .big-card.accent{border-top-color:var(--sd-red);} .big-card.accent .num{color:var(--sd-red);}
+  .big-card.good{border-top-color:var(--green);} .big-card.good .num{color:var(--green);}
+  .big-card.warn{border-top-color:var(--amber);} .big-card.warn .num{color:var(--amber);}
+  .big-card.bad{border-top-color:var(--red);} .big-card.bad .num{color:var(--red);}
+  .big-card.blue{border-top-color:var(--sd-blue);} .big-card.blue .num{color:var(--sd-blue-dark);}
+  .big-card.dark{border-top-color:var(--sd-black);} .big-card.dark .num{color:var(--sd-black);}
+  .section{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:1.8rem;margin-bottom:1.5rem;}
+  .section.bordered{border-left:5px solid var(--sd-red);}
+  .section.bordered-gold{border-left:5px solid var(--sd-gold);}
+  .section.bordered-blue{border-left:5px solid var(--sd-blue);}
+  .section.bordered-black{border-left:5px solid var(--sd-black);}
+  .section h2{font-size:1.2rem;font-weight:700;margin-bottom:.15rem;color:var(--sd-blue-dark);}
+  .section .lead{font-size:.93rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.55;}
+  .section h3{font-size:1rem;font-weight:600;margin:1.2rem 0 .5rem;color:var(--sd-black);}
+  .chart-wide{position:relative;height:320px;margin:1rem 0;}
+  .chart-half{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .chart-box{position:relative;height:300px;}
+  @media(max-width:700px){.chart-half{grid-template-columns:1fr;}}
+  .traffic{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  @media(max-width:600px){.traffic{grid-template-columns:1fr;}}
+  .tl{border-radius:12px;padding:1.05rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;}
+  .tl .dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;margin-top:2px;}
+  .tl .dot.red{background:var(--red);} .tl .dot.amber{background:var(--amber);}
+  .tl .dot.green{background:var(--green);} .tl .dot.blue{background:var(--sd-blue);} .tl .dot.gold{background:var(--sd-gold);}
+  .tl .info{font-size:.88rem;line-height:1.5;}
+  .tl .info strong{display:block;font-size:.95rem;margin-bottom:.15rem;color:var(--text);}
+  .tl-red{background:#fef2f2;border:1px solid #fecaca;}
+  .tl-amber{background:#fffbeb;border:1px solid #fde68a;}
+  .tl-green{background:#f0fdf4;border:1px solid #bbf7d0;}
+  .tl-blue{background:#eff8fd;border:1px solid #bae0f3;}
+  .tl-gold{background:#fff8e8;border:1px solid #f6e0a6;}
+  .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0;}
+  @media(max-width:800px){.actions{grid-template-columns:1fr;}}
+  .action-box{border-radius:12px;padding:1.3rem;}
+  .action-box h4{font-size:.95rem;font-weight:700;margin-bottom:.5rem;}
+  .action-box p{font-size:.86rem;line-height:1.55;}
+  .action-box.ops{background:#eff8fd;border:1px solid #bae0f3;} .action-box.ops h4{color:var(--sd-blue-dark);}
+  .action-box.res{background:#f0fdf4;border:1px solid #bbf7d0;} .action-box.res h4{color:#15803d;}
+  .action-box.perf{background:#fff8e8;border:1px solid #f6e0a6;} .action-box.perf h4{color:#92400e;}
+  .simple-table{width:100%;border-collapse:collapse;font-size:.88rem;margin:1rem 0;}
+  .simple-table th,.simple-table td{padding:.7rem .8rem;text-align:left;border-bottom:1px solid var(--border);}
+  .simple-table th{background:#fbf3e3;font-weight:600;color:var(--sd-red-dark);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;}
+  .simple-table tr:hover td{background:#fdfbf7;}
+  .simple-table td.r,.simple-table th.r{text-align:right;}
+  .pill{display:inline-block;padding:.2rem .65rem;border-radius:20px;font-size:.74rem;font-weight:600;}
+  .pill-red{background:#fef2f2;color:#991b1b;} .pill-amber{background:#fef3c7;color:#92400e;}
+  .pill-green{background:#dcfce7;color:#166534;} .pill-blue{background:#e1f1fb;color:var(--sd-blue-dark);} .pill-gold{background:#fdedc7;color:#8a5a00;}
+  .callout{background:linear-gradient(135deg,#fef2f2,#fff1f2);border:1px solid #fecaca;border-radius:12px;padding:1.3rem;margin:1.2rem 0;text-align:center;}
+  .callout .big{font-size:1.8rem;font-weight:800;color:var(--sd-red);}
+  .callout p{font-size:.92rem;margin-top:.3rem;color:var(--text);}
+  .callout-gold{background:linear-gradient(135deg,#fff8e8,#fffaf0);border:1px solid #f6e0a6;} .callout-gold .big{color:var(--sd-gold-dark);}
+  .callout-blue{background:linear-gradient(135deg,#eff8fd,#f0fbff);border:1px solid #bae0f3;} .callout-blue .big{color:var(--sd-blue-dark);}
+  .nav-links{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 0;}
+  .nav-links a{font-size:.8rem;text-decoration:none;color:var(--sd-blue-dark);background:#eef6fb;border:1px solid #cfe6f4;border-radius:20px;padding:.3rem .8rem;font-weight:600;}
+  .nav-links a:hover{background:#dcedf7;}
+  .sd-footer-stripe{height:5px;display:flex;} .sd-footer-stripe span{flex:1;}
+  .sd-footer-text{text-align:center;padding:1.4rem 1rem 2rem;color:var(--muted);font-size:.8rem;}
+  .sd-footer-text strong{color:var(--sd-red-dark);}
+</style>
+</head>
+<body>
+
+<header class="sd-header">
+  <div class="sd-header-inner">
+    <div class="sd-crest" aria-label="Sandaun crest">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <polygon id="sdstar" points="0,-3 0.7,-0.95 2.85,-0.95 1.1,0.35 1.75,2.4 0,1.15 -1.75,2.4 -1.1,0.35 -2.85,-0.95 -0.7,-0.95" fill="#ffffff"/>
+        </defs>
+        <polygon points="0,0 100,0 0,100" fill="#1A1A1A"/>
+        <polygon points="100,0 100,100 0,100" fill="#D62027"/>
+        <g stroke="#F4A800" stroke-width="2.6" stroke-linecap="round">
+          <line x1="32" y1="44" x2="32" y2="24"/><line x1="32" y1="44" x2="19" y2="30"/>
+          <line x1="32" y1="44" x2="45" y2="30"/><line x1="32" y1="44" x2="13" y2="40"/>
+          <line x1="32" y1="44" x2="51" y2="40"/>
+        </g>
+        <circle cx="32" cy="45" r="10" fill="#1C8FD1" stroke="#F4A800" stroke-width="2.2"/>
+        <use href="#sdstar" x="52" y="11"/><use href="#sdstar" x="66" y="17"/><use href="#sdstar" x="80" y="10"/>
+        <use href="#sdstar" x="58" y="27"/><use href="#sdstar" x="46" y="14"/><use href="#sdstar" x="73" y="26"/>
+        <g fill="none" stroke="#FCD116" stroke-width="2.4" stroke-linecap="round">
+          <path d="M64 84 q11 -2 20 -15"/><path d="M64 84 q13 1 22 -8"/><path d="M64 84 q12 5 23 -1"/>
+        </g>
+        <circle cx="62" cy="84" r="4.3" fill="#FCD116"/>
+        <path d="M58 82.5 l-6 -1 l6 -2.4 z" fill="#FCD116"/>
+      </svg>
+    </div>
+    <div class="sd-titleblock">
+      <div class="sd-eyebrow">Sandaun Province &middot; Department of Education</div>
+      <div class="sd-title">Teachers &amp; Teaching</div>
+      <div class="sd-subtitle">Who is in front of the classroom &mdash; how many, how qualified, where they live &mdash; for the Provincial Education Board</div>
+      <div class="sd-meta">524 schools &bull; 89,730 students &bull; 4 districts &bull; 2025 census</div>
+    </div>
+  </div>
+</header>
+<div class="sd-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+
+<div class="container">
+
+  <div class="big-cards">
+    <div class="big-card blue"><div class="num">2,131</div><div class="label">Teachers in schools (Prep&ndash;Grade 8)</div></div>
+    <div class="big-card warn"><div class="num">35</div><div class="label">Median pupils per teacher (mean 42)</div></div>
+    <div class="big-card bad"><div class="num">192</div><div class="label">Understaffed schools (over 40 PTR)</div></div>
+    <div class="big-card"><div class="num">86%</div><div class="label">Teachers fully qualified</div></div>
+    <div class="big-card accent"><div class="num">40%</div><div class="label">Teachers who are female</div></div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="section bordered-gold">
+    <h2>What the census says about the teaching workforce</h2>
+    <p class="lead">Sandaun has 2,131 teachers spread across 521 schools that returned enrolment. The quality of the workforce is not the problem &mdash; 86% are fully qualified. The problems are distribution and conditions: too many children per teacher in Nuku and Vanimo/Green River, a registration backlog that has little to do with skill, too few women in the classroom, and nowhere for teachers to live.</p>
+    <div class="traffic">
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>192 schools are understaffed</strong>37% of schools run more than 40 pupils per teacher. The median is 35, but the worst schools put one teacher against 150&ndash;250 children.</div></div>
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>The workforce is qualified</strong>86% of teachers are fully qualified (1,735). Only 216 are under- or partially-qualified. The bottleneck is registration access, not teacher quality.</div></div>
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Only 40% of teachers are women</strong>And it is lowest exactly where girls drop out fastest &mdash; 28% female in Telefomin, which also has the worst Grade 8 gender parity.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Teachers have nowhere to live</strong>200 schools (40%) have no staff house at all; the province is short roughly 951 houses against a one-house-per-teacher standard.</div></div>
+    </div>
+    <div class="nav-links">
+      <a href="Sandaun_Executive_Dashboard.html">&uarr; Executive</a>
+      <a href="Sandaun_Enrollment_Analysis.html">Enrolment &amp; flow &rarr;</a>
+      <a href="Sandaun_Infrastructure_Analysis.html">Infrastructure &rarr;</a>
+      <a href="Sandaun_Gender_Equity_Analysis.html">Gender equity &rarr;</a>
+      <a href="Sandaun_School_Risk_Index.html">School risk index &rarr;</a>
+    </div>
+  </div>
+
+  <!-- ARE THERE ENOUGH TEACHERS -->
+  <div class="section bordered">
+    <h2>Are there enough teachers?</h2>
+    <p class="lead">For the province as a whole the median school runs 35 pupils per teacher (PTR) &mdash; close to the national target &mdash; but the mean is 42, dragged up by a long tail of overloaded schools. 192 of 521 schools (37%) exceed 40 PTR. Nuku and Vanimo/Green River carry the heaviest load; Telefomin, with the smallest schools, is the best staffed.</p>
+    <div class="chart-wide"><canvas id="ptrBars"></canvas></div>
+    <table class="simple-table">
+      <thead><tr><th>District</th><th class="r">Schools</th><th class="r">Enrolment</th><th class="r">Teachers</th><th class="r">Median PTR</th><th class="r">Understaffed &gt;40</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aitape/Lumi</strong></td><td class="r">119</td><td class="r">22,985</td><td class="r">600</td><td class="r">33.9</td><td class="r">35</td><td><span class="pill pill-amber">Watch</span></td></tr>
+        <tr><td><strong>Nuku</strong></td><td class="r">155</td><td class="r">25,309</td><td class="r">588</td><td class="r">37.6</td><td class="r">68</td><td><span class="pill pill-red">Critical</span></td></tr>
+        <tr><td><strong>Telefomin</strong></td><td class="r">96</td><td class="r">12,401</td><td class="r">314</td><td class="r">31.8</td><td class="r">24</td><td><span class="pill pill-green">Best staffed</span></td></tr>
+        <tr><td><strong>Vanimo/Green River</strong></td><td class="r">151</td><td class="r">28,723</td><td class="r">630</td><td class="r">37.3</td><td class="r">65</td><td><span class="pill pill-red">Critical</span></td></tr>
+        <tr><td><strong>Province</strong></td><td class="r">521</td><td class="r">89,418</td><td class="r">2,131</td><td class="r">35.3</td><td class="r">192</td><td><span class="pill pill-amber">37% over 40</span></td></tr>
+      </tbody>
+    </table>
+    <h3>The worst single schools &mdash; where one teacher faces a crowd</h3>
+    <table class="simple-table">
+      <thead><tr><th>School</th><th class="r">Enrolment</th><th class="r">Teachers</th><th class="r">PTR</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Holy Trinity / Baro Primary</td><td class="r">4,656</td><td class="r">13</td><td class="r">358</td><td><span class="pill pill-amber">Likely data error</span> enrolment overstated &mdash; verify on the ground</td></tr>
+        <tr><td>Mokweitami Elementary</td><td class="r">257</td><td class="r">1</td><td class="r">257</td><td><span class="pill pill-red">Post a teacher</span></td></tr>
+        <tr><td>Fiyak Primary</td><td class="r">191</td><td class="r">1</td><td class="r">191</td><td><span class="pill pill-red">Post a teacher</span></td></tr>
+        <tr><td>Yeftim Primary</td><td class="r">190</td><td class="r">1</td><td class="r">190</td><td><span class="pill pill-red">Post a teacher</span></td></tr>
+        <tr><td>Walwo Elementary</td><td class="r">189</td><td class="r">1</td><td class="r">189</td><td><span class="pill pill-red">Post a teacher</span></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:.82rem;color:var(--muted);margin-top:.5rem;">At the other end, 14 schools run below 15 pupils per teacher &mdash; small remote schools where a transfer out would help relieve the overloaded schools above.</p>
+  </div>
+
+  <!-- ARE TEACHERS QUALIFIED -->
+  <div class="section bordered-blue">
+    <h2>Are teachers qualified?</h2>
+    <p class="lead">Yes &mdash; on the whole. 86% of teachers (1,735) are fully qualified, with most holding a Primary Diploma or Elementary Certificate. Only 216 teachers (11%) are under- or partially-qualified. Quality is not the binding constraint in Sandaun; getting qualified teachers registered and housed is.</p>
+    <div class="chart-half">
+      <div class="chart-box"><canvas id="qualDoughnut"></canvas></div>
+      <div class="chart-box"><canvas id="mixBars"></canvas></div>
+    </div>
+    <div class="traffic">
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>86% fully qualified</strong>1,735 teachers are fully qualified; 80 partial (4%), 136 under-qualified (7%), 40 missing (2%).</div></div>
+      <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>Diploma &amp; certificate dominate</strong>Primary Diploma 1,063 (53%), Elementary Certificate 603 (30%), Degree 65 (3%) &mdash; a solid but lightly-credentialed base.</div></div>
+    </div>
+  </div>
+
+  <!-- REGISTRATION -->
+  <div class="section bordered">
+    <h2>Why are so many teachers unregistered?</h2>
+    <p class="lead">69% of teachers hold full registration, but 27% (538) are only provisionally registered and a further 39 are still in training. This is not a quality problem &mdash; 96% are TSC-employed. The bottleneck is access to the Provincial Registration Committee (PRC) office: teachers in remote schools simply cannot get their paperwork processed.</p>
+    <div class="chart-wide"><canvas id="regBars"></canvas></div>
+    <div class="callout callout-blue">
+      <div class="big">39 schools</div>
+      <p>have 75% or more of their teachers on provisional registration &mdash; concentrated in the hardest-to-reach areas. The fix is a mobile PRC service, not retraining.</p>
+    </div>
+  </div>
+
+  <!-- TEACHER GENDER -->
+  <div class="section bordered-gold">
+    <h2>How many teachers are women &mdash; and does it matter?</h2>
+    <p class="lead">Sixty per cent of teachers are male (1,215) and 40% female (788). It matters because the share of female teachers tracks the gender parity of pupils: Telefomin has the fewest women in the classroom (28%) and the worst Grade 8 parity (GPI 0.646), while Vanimo/Green River has the most women (41%) and the best parity (GPI 0.866). Recruiting and housing female teachers is part of keeping girls in school.</p>
+    <div class="chart-wide"><canvas id="femaleBars"></canvas></div>
+    <table class="simple-table">
+      <thead><tr><th>District</th><th class="r">% Female teachers</th><th class="r">Grade 8 GPI</th><th>Reading</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aitape/Lumi</strong></td><td class="r">48%</td><td class="r">&mdash;</td><td><span class="pill pill-green">Most women</span></td></tr>
+        <tr><td><strong>Nuku</strong></td><td class="r">35%</td><td class="r">&mdash;</td><td><span class="pill pill-amber">Below average</span></td></tr>
+        <tr><td><strong>Telefomin</strong></td><td class="r">28%</td><td class="r">0.646</td><td><span class="pill pill-red">Fewest women, worst parity</span></td></tr>
+        <tr><td><strong>Vanimo/Green River</strong></td><td class="r">41%</td><td class="r">0.866</td><td><span class="pill pill-green">Best parity</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- HOUSING -->
+  <div class="section bordered-black">
+    <h2>Where do teachers live? The housing crisis</h2>
+    <p class="lead">This is the binding constraint on staffing. Against ~2,251 teachers there are only about 1,300 houses &mdash; a shortfall of roughly 951. 200 of 500 schools (40%) have no staff house at all, and only 140 (28%) meet the one-house-per-teacher standard. No teacher will stay posted where there is nowhere to live, so housing drives both the understaffing and the registration backlog above.</p>
+    <div class="callout">
+      <div class="big">~951 houses short</div>
+      <p>40% of schools have zero staff houses; only 28% meet the one-house-per-teacher standard. Housing is the reason teachers do not stay in the hardest places.</p>
+    </div>
+    <div class="chart-wide"><canvas id="housingBars"></canvas></div>
+    <table class="simple-table">
+      <thead><tr><th>District</th><th class="r">Housing gap</th><th class="r">Zero-house schools</th><th>Headline</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aitape/Lumi</strong></td><td class="r">251</td><td class="r">48</td><td><span class="pill pill-amber">Watch</span></td></tr>
+        <tr><td><strong>Nuku</strong></td><td class="r">242</td><td class="r">59</td><td><span class="pill pill-red">Most zero-house schools</span></td></tr>
+        <tr><td><strong>Telefomin</strong></td><td class="r">134</td><td class="r">41</td><td><span class="pill pill-red">44% of its schools have none</span></td></tr>
+        <tr><td><strong>Vanimo/Green River</strong></td><td class="r">331</td><td class="r">52</td><td><span class="pill pill-red">Largest absolute gap</span></td></tr>
+      </tbody>
+    </table>
+    <h3>Worst individual schools &mdash; many teachers, almost no houses</h3>
+    <table class="simple-table">
+      <thead><tr><th>School</th><th class="r">Teachers</th><th class="r">Houses</th><th class="r">Gap</th></tr></thead>
+      <tbody>
+        <tr><td>Dapu Primary</td><td class="r">40</td><td class="r">7</td><td class="r">33</td></tr>
+        <tr><td>Vanimo Primary</td><td class="r">32</td><td class="r">2</td><td class="r">30</td></tr>
+        <tr><td>Aitape Primary</td><td class="r">26</td><td class="r">6</td><td class="r">20</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="section bordered-blue">
+    <h2>Priority actions for 2026</h2>
+    <p class="lead">Three moves would put more qualified teachers in front of more children, and keep them there.</p>
+    <div class="actions">
+      <div class="action-box ops"><h4>Deploy teachers to the overload</h4><p>Resolve the single-teacher schools above 150 pupils first (Mokweitami, Fiyak, Yeftim, Walwo) and rebalance the 192 understaffed schools in Nuku and Vanimo/Green River. Verify the Holy Trinity/Baro Primary figure on the ground &mdash; a PTR of 358 is a likely data-entry error.</p></div>
+      <div class="action-box res"><h4>Fix registration access</h4><p>Run a mobile PRC service into the 39 schools where 75%+ of teachers are provisional. These teachers are qualified and TSC-employed; the only thing missing is access to the office. This is the cheapest, fastest win.</p></div>
+      <div class="action-box perf"><h4>Build houses, recruit women</h4><p>Close the ~951-house gap starting with the 200 zero-house schools and the worst cases (Dapu, Vanimo, Aitape Primary). Tie new housing to recruiting female teachers in Telefomin and Nuku, where too few women and weak girls&rsquo; parity go together.</p></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="sd-footer-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+  <div class="sd-footer-text">
+    <strong>Sandaun Education</strong> &middot; Teacher Analysis &middot; 2025 Annual School Census<br>
+    <span style="font-size:.72rem;">Source: PNG NDoE 2025 Annual School Census, Sandaun (West Sepik) rows. Teacher counts summed from per-school Prep&ndash;Grade 8 returns; pupil&ndash;teacher ratios computed per school.</span>
+  </div>
+</footer>
+
+<script>
+const SD = {
+  gold:'#F4A800', goldDark:'#B97400', orange:'#E0651E',
+  red:'#D62027', redDark:'#8E1418', blue:'#1C8FD1', blueDark:'#0B5C8A',
+  black:'#1A1A1A', pngGold:'#FCD116',
+  green:'#16a34a', amber:'#d97706', alertRed:'#dc2626',
+  teal:'#0d9488', pink:'#ec4899', grey:'#94a3b8'
+};
+SD.series = [SD.gold, SD.blue, SD.red, SD.teal, SD.orange, SD.pink, SD.grey];
+Chart.defaults.font.family = "'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size = 13;
+Chart.defaults.color = '#101828';
+Chart.defaults.plugins.legend.display = false;
+
+const districts = ['Aitape/Lumi','Nuku','Telefomin','Vanimo/Green River'];
+
+// District median PTR — traffic-light coloured (green good, amber watch, red critical)
+new Chart(document.getElementById('ptrBars'),{
+  type:'bar',
+  data:{labels:districts,datasets:[{label:'Median PTR',data:[33.9,37.6,31.8,37.3],
+    backgroundColor:[SD.amber,SD.red,SD.green,SD.red],borderRadius:6}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Median pupils per teacher by district (target ≈ 35; over 40 = understaffed)',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.y.toFixed(1)+' pupils per teacher'}}},
+    scales:{y:{suggestedMax:45,title:{display:true,text:'Median PTR'}},x:{grid:{display:false}}}}
+});
+
+// Qualification doughnut
+new Chart(document.getElementById('qualDoughnut'),{
+  type:'doughnut',
+  data:{labels:['Qualified','Partially qualified','Under-qualified','Missing'],
+    datasets:[{data:[1735,80,136,40],backgroundColor:[SD.green,SD.amber,SD.red,SD.grey]}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Qualification status (2,131 teachers) — 86% qualified',font:{size:13,weight:'bold'}},legend:{display:true,position:'bottom'}}}
+});
+
+// Qualification mix
+new Chart(document.getElementById('mixBars'),{
+  type:'bar',
+  data:{labels:['Primary Diploma','Elementary Certificate','Degree'],
+    datasets:[{data:[1063,603,65],backgroundColor:[SD.blue,SD.gold,SD.teal],borderRadius:5}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{title:{display:true,text:'Qualification held (top categories)',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.x.toLocaleString()+' teachers'}}},
+    scales:{x:{ticks:{callback:v=>v.toLocaleString()}},y:{grid:{display:false}}}}
+});
+
+// Registration bar
+new Chart(document.getElementById('regBars'),{
+  type:'bar',
+  data:{labels:['Full','Provisional','In-training','Missing'],
+    datasets:[{label:'Teachers',data:[1381,538,39,53],
+      backgroundColor:[SD.green,SD.amber,SD.blue,SD.grey],borderRadius:6}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Registration status — 69% full, 27% provisional (a PRC-access problem)',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.y.toLocaleString()+' teachers'}}},
+    scales:{y:{ticks:{callback:v=>v.toLocaleString()},title:{display:true,text:'Teachers'}},x:{grid:{display:false}}}}
+});
+
+// % female teachers by district — traffic-light vs parity
+new Chart(document.getElementById('femaleBars'),{
+  type:'bar',
+  data:{labels:districts,datasets:[{label:'% female teachers',data:[48,35,28,41],
+    backgroundColor:[SD.green,SD.amber,SD.red,SD.green],borderRadius:6}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Female teachers by district (%) — lowest in Telefomin, where girls’ parity is worst',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.y+'% female'}}},
+    scales:{y:{suggestedMax:60,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}
+});
+
+// Housing gap by district
+new Chart(document.getElementById('housingBars'),{
+  type:'bar',
+  data:{labels:districts,datasets:[
+    {label:'Housing gap (teachers without a house)',data:[251,242,134,331],backgroundColor:SD.red,borderRadius:6},
+    {label:'Schools with zero houses',data:[48,59,41,52],backgroundColor:SD.gold,borderRadius:6}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Staff-housing gap and zero-house schools by district',font:{size:13,weight:'bold'}},legend:{display:true,position:'bottom'}},
+    scales:{y:{title:{display:true,text:'Count'}},x:{grid:{display:false}}}}
+});
+</script>
+</body>
+</html>

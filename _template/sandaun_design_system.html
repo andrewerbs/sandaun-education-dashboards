@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sandaun Dashboard – Design System & Starter Template</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  /* ============================================================
+     SANDAUN (WEST SEPIK) PROVINCE — DASHBOARD DESIGN SYSTEM
+     ------------------------------------------------------------
+     Brand palette draws on the Sandaun provincial flag:
+       Black upper triangle (stars) + Red lower triangle +
+       Blue setting-sun disk + Gold sun-rays & bird-of-paradise.
+     "Sandaun" = "sun down": PNG's westernmost province, home of
+     the sunset. The header carries a sunset gradient; the stripe
+     and footer use the flag's gold / red / black.
+     Parallel in structure and naming to the AROB and Central
+     Province design systems so the three suites sit side by side.
+     Copy this file as the starting point for any new dashboard.
+     ============================================================ */
+  :root{
+    /* Sandaun flag palette */
+    --sd-gold:#F4A800;        /* sunset gold — sun rays; primary chart fill / accent */
+    --sd-gold-dark:#B97400;   /* deep gold — KPI numbers, readable on white */
+    --sd-orange:#E0651E;      /* sunset orange — gradient mid, secondary emphasis */
+    --sd-red:#D62027;         /* flag red (lower triangle) — emphasis / warnings */
+    --sd-red-dark:#8E1418;
+    --sd-blue:#1C8FD1;        /* setting-sun blue disk — secondary chart series */
+    --sd-blue-dark:#0B5C8A;   /* headings, deep accent */
+    --sd-black:#1A1A1A;       /* upper triangle / PNG black / high-contrast accent */
+    --sd-white:#FFFFFF;
+    --png-gold:#FCD116;       /* PNG flag gold (footer accent / bird-of-paradise) */
+    /* Functional palette (status colours match the AROB / Central convention) */
+    --green:#16a34a;
+    --amber:#d97706;
+    --red:#dc2626;
+    --teal:#0d9488;
+    --pink:#ec4899;
+    /* Neutrals — warmed slightly to suit the sunset palette */
+    --bg:#faf7f2;
+    --card:#ffffff;
+    --text:#101828;
+    --muted:#6b7280;
+    --border:#e7e2d9;
+    --shadow:0 2px 10px rgba(120,60,0,.08);
+    --shadow-lg:0 8px 24px rgba(120,60,0,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;}
+
+  /* ============================================================
+     HEADER — Sandaun crest + title block
+     Sunset gradient (gold/orange → red → dusk → black) with a
+     soft gold sun-glow, echoing the flag's setting sun.
+     ============================================================ */
+  .sd-header{position:relative;color:#fff;padding:1.8rem 1.5rem 5.5rem;overflow:hidden;
+    text-shadow:0 1px 3px rgba(0,0,0,.35);
+    background:linear-gradient(135deg,#E0651E 0%,#C2410C 34%,#8E1418 58%,#3A1410 80%,#1A1A1A 100%);}
+  .sd-header::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(circle at 14% 26%,rgba(244,168,0,.55) 0,rgba(244,168,0,0) 38%);}
+  .sd-header::after{content:"";position:absolute;inset:0;opacity:.10;pointer-events:none;
+    background-image:radial-gradient(circle at 70% 22%,#fff 0 1.4px,transparent 2.2px),
+                     radial-gradient(circle at 84% 40%,#fff 0 1px,transparent 1.8px),
+                     radial-gradient(circle at 58% 14%,#fff 0 1.2px,transparent 2px);
+    background-size:240px 240px,200px 200px,300px 300px;}
+  .sd-header-inner{position:relative;max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:1.2rem;}
+  .sd-crest{flex:0 0 auto;width:64px;height:64px;border-radius:10px;background:#fff;padding:6px;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  .sd-crest svg{width:100%;height:100%;display:block;border-radius:4px;}
+  .sd-titleblock{flex:1;min-width:0;}
+  .sd-eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.9;font-weight:600;}
+  .sd-title{font-size:1.55rem;font-weight:800;line-height:1.2;margin-top:.15rem;}
+  .sd-subtitle{font-size:.95rem;opacity:.92;margin-top:.25rem;}
+  .sd-meta{font-size:.78rem;opacity:.8;margin-top:.4rem;}
+  /* Sandaun stripe under header (gold / red / black — the flag colours) */
+  .sd-stripe{height:6px;display:flex;}
+  .sd-stripe span{flex:1;}
+  .sd-stripe .s-gold{background:var(--sd-gold);}
+  .sd-stripe .s-red{background:var(--sd-red);}
+  .sd-stripe .s-black{background:var(--sd-black);}
+
+  /* ============================================================
+     LAYOUT
+     ============================================================ */
+  .container{max-width:1180px;margin:0 auto;padding:0 1.2rem 2rem;}
+
+  /* KPI strip that overlaps the header */
+  .big-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem;margin:-4rem 0 1.5rem;position:relative;z-index:1;}
+  .big-card{background:var(--card);border-radius:14px;padding:1.4rem 1.2rem;box-shadow:var(--shadow);text-align:center;border-top:4px solid var(--sd-gold);}
+  .big-card .num{font-size:2.1rem;font-weight:800;line-height:1.1;color:var(--sd-gold-dark);}
+  .big-card .label{font-size:.82rem;color:var(--muted);margin-top:.4rem;line-height:1.35;}
+  .big-card.accent{border-top-color:var(--sd-red);} .big-card.accent .num{color:var(--sd-red);}
+  .big-card.good{border-top-color:var(--green);} .big-card.good .num{color:var(--green);}
+  .big-card.warn{border-top-color:var(--amber);} .big-card.warn .num{color:var(--amber);}
+  .big-card.bad{border-top-color:var(--red);} .big-card.bad .num{color:var(--red);}
+  .big-card.blue{border-top-color:var(--sd-blue);} .big-card.blue .num{color:var(--sd-blue-dark);}
+  .big-card.dark{border-top-color:var(--sd-black);} .big-card.dark .num{color:var(--sd-black);}
+
+  /* Sections */
+  .section{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:1.8rem;margin-bottom:1.5rem;}
+  .section.bordered{border-left:5px solid var(--sd-red);}
+  .section.bordered-gold{border-left:5px solid var(--sd-gold);}
+  .section.bordered-blue{border-left:5px solid var(--sd-blue);}
+  .section.bordered-black{border-left:5px solid var(--sd-black);}
+  .section h2{font-size:1.2rem;font-weight:700;margin-bottom:.15rem;color:var(--sd-blue-dark);}
+  .section .lead{font-size:.93rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.55;}
+  .section h3{font-size:1rem;font-weight:600;margin:1.2rem 0 .5rem;color:var(--sd-black);}
+
+  /* Chart containers */
+  .chart-wide{position:relative;height:300px;margin:1rem 0;}
+  .chart-half{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .chart-box{position:relative;height:280px;}
+  @media(max-width:700px){.chart-half{grid-template-columns:1fr;}}
+
+  /* Traffic-light callouts */
+  .traffic{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  @media(max-width:600px){.traffic{grid-template-columns:1fr;}}
+  .tl{border-radius:12px;padding:1.05rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;}
+  .tl .dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;margin-top:2px;}
+  .tl .dot.red{background:var(--red);}
+  .tl .dot.amber{background:var(--amber);}
+  .tl .dot.green{background:var(--green);}
+  .tl .dot.blue{background:var(--sd-blue);}
+  .tl .dot.gold{background:var(--sd-gold);}
+  .tl .info{font-size:.88rem;line-height:1.5;}
+  .tl .info strong{display:block;font-size:.95rem;margin-bottom:.15rem;color:var(--text);}
+  .tl-red{background:#fef2f2;border:1px solid #fecaca;}
+  .tl-amber{background:#fffbeb;border:1px solid #fde68a;}
+  .tl-green{background:#f0fdf4;border:1px solid #bbf7d0;}
+  .tl-blue{background:#eff8fd;border:1px solid #bae0f3;}
+  .tl-gold{background:#fff8e8;border:1px solid #f6e0a6;}
+
+  /* Action boxes */
+  .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0;}
+  @media(max-width:800px){.actions{grid-template-columns:1fr;}}
+  .action-box{border-radius:12px;padding:1.3rem;text-align:left;}
+  .action-box h4{font-size:.95rem;font-weight:700;margin-bottom:.5rem;}
+  .action-box p{font-size:.86rem;line-height:1.55;}
+  .action-box.ops{background:#eff8fd;border:1px solid #bae0f3;} .action-box.ops h4{color:var(--sd-blue-dark);}
+  .action-box.res{background:#f0fdf4;border:1px solid #bbf7d0;} .action-box.res h4{color:#15803d;}
+  .action-box.perf{background:#fff8e8;border:1px solid #f6e0a6;} .action-box.perf h4{color:#92400e;}
+
+  /* Simple table */
+  .simple-table{width:100%;border-collapse:collapse;font-size:.88rem;margin:1rem 0;}
+  .simple-table th,.simple-table td{padding:.7rem .8rem;text-align:left;border-bottom:1px solid var(--border);}
+  .simple-table th{background:#fbf3e3;font-weight:600;color:var(--sd-red-dark);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;}
+  .simple-table tr:hover td{background:#fdfbf7;}
+
+  /* Status pills */
+  .pill{display:inline-block;padding:.2rem .65rem;border-radius:20px;font-size:.74rem;font-weight:600;}
+  .pill-red{background:#fef2f2;color:#991b1b;}
+  .pill-amber{background:#fef3c7;color:#92400e;}
+  .pill-green{background:#dcfce7;color:#166534;}
+  .pill-blue{background:#e1f1fb;color:var(--sd-blue-dark);}
+  .pill-gold{background:#fdedc7;color:#8a5a00;}
+
+  /* Callout */
+  .callout{background:linear-gradient(135deg,#fef2f2,#fff1f2);border:1px solid #fecaca;border-radius:12px;padding:1.3rem;margin:1.2rem 0;text-align:center;}
+  .callout .big{font-size:1.8rem;font-weight:800;color:var(--sd-red);}
+  .callout p{font-size:.92rem;margin-top:.3rem;color:var(--text);}
+  .callout-gold{background:linear-gradient(135deg,#fff8e8,#fffaf0);border:1px solid #f6e0a6;}
+  .callout-gold .big{color:var(--sd-gold-dark);}
+  .callout-blue{background:linear-gradient(135deg,#eff8fd,#f0fbff);border:1px solid #bae0f3;}
+  .callout-blue .big{color:var(--sd-blue-dark);}
+
+  /* Footer */
+  .sd-footer{margin-top:.5rem;}
+  .sd-footer-stripe{height:5px;display:flex;}
+  .sd-footer-stripe span{flex:1;}
+  .sd-footer-text{text-align:center;padding:1.4rem 1rem 2rem;color:var(--muted);font-size:.8rem;}
+  .sd-footer-text strong{color:var(--sd-red-dark);}
+
+  /* Swatches (delete on real dashboards) */
+  .swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;margin:1rem 0;}
+  .sw{border-radius:10px;padding:.9rem;color:#fff;font-size:.78rem;}
+  .sw .hex{font-family:'Menlo',monospace;opacity:.85;font-size:.72rem;display:block;margin-top:.2rem;}
+  .sw.light{color:var(--text);}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER  — replace title + subtitle + meta for each dashboard
+     ============================================================ -->
+<header class="sd-header">
+  <div class="sd-header-inner">
+    <div class="sd-crest" aria-label="Sandaun crest">
+      <!-- Inline simplified Sandaun crest: diagonal black/red field,
+           blue setting sun with gold rays, six stars, gold bird-of-paradise -->
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <polygon id="sdstar" points="0,-3 0.7,-0.95 2.85,-0.95 1.1,0.35 1.75,2.4 0,1.15 -1.75,2.4 -1.1,0.35 -2.85,-0.95 -0.7,-0.95" fill="#ffffff"/>
+        </defs>
+        <polygon points="0,0 100,0 0,100" fill="#1A1A1A"/>
+        <polygon points="100,0 100,100 0,100" fill="#D62027"/>
+        <g stroke="#F4A800" stroke-width="2.6" stroke-linecap="round">
+          <line x1="32" y1="44" x2="32" y2="24"/>
+          <line x1="32" y1="44" x2="19" y2="30"/>
+          <line x1="32" y1="44" x2="45" y2="30"/>
+          <line x1="32" y1="44" x2="13" y2="40"/>
+          <line x1="32" y1="44" x2="51" y2="40"/>
+        </g>
+        <circle cx="32" cy="45" r="10" fill="#1C8FD1" stroke="#F4A800" stroke-width="2.2"/>
+        <use href="#sdstar" x="52" y="11"/>
+        <use href="#sdstar" x="66" y="17"/>
+        <use href="#sdstar" x="80" y="10"/>
+        <use href="#sdstar" x="58" y="27"/>
+        <use href="#sdstar" x="46" y="14"/>
+        <use href="#sdstar" x="73" y="26"/>
+        <g fill="none" stroke="#FCD116" stroke-width="2.4" stroke-linecap="round">
+          <path d="M64 84 q11 -2 20 -15"/>
+          <path d="M64 84 q13 1 22 -8"/>
+          <path d="M64 84 q12 5 23 -1"/>
+        </g>
+        <circle cx="62" cy="84" r="4.3" fill="#FCD116"/>
+        <path d="M58 82.5 l-6 -1 l6 -2.4 z" fill="#FCD116"/>
+      </svg>
+    </div>
+    <div class="sd-titleblock">
+      <div class="sd-eyebrow">Sandaun Province &middot; Department of Education</div>
+      <div class="sd-title">Dashboard Title Goes Here</div>
+      <div class="sd-subtitle">Short descriptor &mdash; what this dashboard answers</div>
+      <div class="sd-meta">524 schools &bull; 89,730 students &bull; 4 districts &bull; 2025 census</div>
+    </div>
+  </div>
+</header>
+<div class="sd-stripe"><span class="s-gold"></span><span class="s-red"></span><span class="s-black"></span></div>
+
+<div class="container">
+
+  <!-- KPI strip overlapping the header -->
+  <div class="big-cards">
+    <div class="big-card"><div class="num">524</div><div class="label">Schools with 2025 census returns</div></div>
+    <div class="big-card accent"><div class="num">89,730</div><div class="label">Students enrolled (Prep&ndash;G8)</div></div>
+    <div class="big-card blue"><div class="num">2,131</div><div class="label">Teachers in schools (39% female)</div></div>
+    <div class="big-card warn"><div class="num">70%</div><div class="label">Of Grade 2 children reach Grade 3</div></div>
+  </div>
+
+  <!-- STYLE GUIDE — remove when copying this template -->
+  <div class="section bordered">
+    <h2>Brand palette</h2>
+    <p class="lead">Colours come from the Sandaun provincial flag &mdash; a black upper triangle with white stars and a blue setting sun with gold rays, over a red lower triangle carrying the gold bird-of-paradise. &ldquo;Sandaun&rdquo; means sun-down: the province is the home of PNG&rsquo;s sunset. Use the deep sun-blue for headings, gold for primary chart fills and KPI accents, red for emphasis and warnings, black sparingly for contrast.</p>
+    <div class="swatches">
+      <div class="sw light" style="background:#F4A800"><strong>Sunset Gold</strong><span class="hex">#F4A800</span></div>
+      <div class="sw" style="background:#B97400"><strong>Gold Dark</strong><span class="hex">#B97400</span></div>
+      <div class="sw" style="background:#E0651E"><strong>Sunset Orange</strong><span class="hex">#E0651E</span></div>
+      <div class="sw" style="background:#D62027"><strong>Flag Red</strong><span class="hex">#D62027</span></div>
+      <div class="sw" style="background:#1C8FD1"><strong>Setting-Sun Blue</strong><span class="hex">#1C8FD1</span></div>
+      <div class="sw" style="background:#0B5C8A"><strong>Blue Dark</strong><span class="hex">#0B5C8A</span></div>
+      <div class="sw" style="background:#1A1A1A"><strong>Flag Black</strong><span class="hex">#1A1A1A</span></div>
+      <div class="sw light" style="background:#FCD116"><strong>PNG Gold</strong><span class="hex">#FCD116</span></div>
+    </div>
+  </div>
+
+  <div class="section bordered-blue">
+    <h2>Component library</h2>
+    <p class="lead">Copy these patterns into new dashboards. Status colours (green / amber / red) match the PEIP traffic-light conventions used across the AROB and Central Province suites.</p>
+
+    <h3>Traffic-light callouts</h3>
+    <div class="traffic">
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Good news headline</strong>One short sentence explaining what is working and why it matters.</div></div>
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Watch this</strong>An emerging issue or partial progress worth flagging.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Critical problem</strong>Something that needs immediate attention from leadership.</div></div>
+      <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>Provincial action</strong>A decision or commitment tied to the Sandaun PEIP 2023&ndash;2027.</div></div>
+    </div>
+
+    <h3>Action boxes</h3>
+    <div class="actions">
+      <div class="action-box ops"><h4>Operations</h4><p>Use for day-to-day delivery actions &mdash; staffing, logistics, supply chain.</p></div>
+      <div class="action-box res"><h4>Resources</h4><p>Use for budget, funding, and material allocation decisions.</p></div>
+      <div class="action-box perf"><h4>Performance</h4><p>Use for outcomes, learning, equity, and accountability.</p></div>
+    </div>
+
+    <h3>Charts (Sandaun palette applied)</h3>
+    <div class="chart-half">
+      <div class="chart-box"><canvas id="demoBar"></canvas></div>
+      <div class="chart-box"><canvas id="demoDoughnut"></canvas></div>
+    </div>
+
+    <h3>Status pills</h3>
+    <p style="margin:.5rem 0;font-size:.9rem;">
+      <span class="pill pill-green">On track</span>
+      <span class="pill pill-amber">At risk</span>
+      <span class="pill pill-red">Critical</span>
+      <span class="pill pill-blue">Provincial priority</span>
+      <span class="pill pill-gold">Watch</span>
+    </p>
+
+    <h3>Callouts</h3>
+    <div class="callout"><div class="big">3,699 children lost</div><p>at the Grade 2 &rarr; Grade 3 transition &mdash; only 70% of Grade 2 students appear in Grade 3.</p></div>
+    <div class="callout callout-gold"><div class="big">200 schools</div><p>have no staff houses at all &mdash; 40% of schools, against a &ldquo;one house per teacher&rdquo; policy.</p></div>
+  </div>
+
+</div>
+
+<footer class="sd-footer">
+  <div class="sd-footer-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+  <div class="sd-footer-text">
+    <strong>Sandaun Education</strong> &middot; Dashboard design system &middot; v1.0<br>
+    <span style="font-size:.72rem;">Palette derived from the Sandaun (West Sepik) provincial flag &mdash; setting sun, stars, bird-of-paradise. Source data: 2025 Annual School Census.</span>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   SHARED CHART DEFAULTS — paste this block into every dashboard.
+   ============================================================ */
+const SD = {
+  gold:'#F4A800', goldDark:'#B97400', orange:'#E0651E',
+  red:'#D62027', redDark:'#8E1418',
+  blue:'#1C8FD1', blueDark:'#0B5C8A',
+  black:'#1A1A1A', pngGold:'#FCD116',
+  green:'#16a34a', amber:'#d97706', alertRed:'#dc2626',
+  teal:'#0d9488', pink:'#ec4899', grey:'#94a3b8'
+};
+/* Ordered palette for categorical charts (district / category series) */
+SD.series = [SD.gold, SD.blue, SD.red, SD.teal, SD.orange, SD.pink, SD.grey];
+
+Chart.defaults.font.family = "'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size = 13;
+Chart.defaults.color = '#101828';
+Chart.defaults.plugins.legend.display = false;
+
+/* Demo charts (delete when copying this file) */
+new Chart(document.getElementById('demoBar'),{
+  type:'bar',
+  data:{labels:['Vanimo/Green River','Nuku','Aitape/Lumi','Telefomin'],
+    datasets:[{data:[28723,25309,22985,12401],backgroundColor:SD.series,borderRadius:6}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Students by district',font:{size:14,weight:'bold'}}},
+    scales:{y:{ticks:{callback:v=>v.toLocaleString()}},x:{grid:{display:false}}}}
+});
+new Chart(document.getElementById('demoDoughnut'),{
+  type:'doughnut',
+  data:{labels:['Permanent','Semi-permanent','Bush material'],
+    datasets:[{data:[1082,644,615],backgroundColor:[SD.green,SD.amber,SD.red]}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Classroom type',font:{size:14,weight:'bold'}},legend:{display:true,position:'bottom'}}}
+});
+</script>
+</body>
+</html>

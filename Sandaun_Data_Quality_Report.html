@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sandaun — Data Quality Report</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --sd-gold:#F4A800;--sd-gold-dark:#B97400;--sd-orange:#E0651E;
+    --sd-red:#D62027;--sd-red-dark:#8E1418;
+    --sd-blue:#1C8FD1;--sd-blue-dark:#0B5C8A;
+    --sd-black:#1A1A1A;--sd-white:#FFFFFF;--png-gold:#FCD116;
+    --green:#16a34a;--amber:#d97706;--red:#dc2626;--teal:#0d9488;--pink:#ec4899;
+    --bg:#faf7f2;--card:#fff;--text:#101828;--muted:#6b7280;--border:#e7e2d9;
+    --shadow:0 2px 10px rgba(120,60,0,.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;}
+  .sd-header{position:relative;color:#fff;padding:1.8rem 1.5rem 5.5rem;overflow:hidden;text-shadow:0 1px 3px rgba(0,0,0,.35);
+    background:linear-gradient(135deg,#E0651E 0%,#C2410C 34%,#8E1418 58%,#3A1410 80%,#1A1A1A 100%);}
+  .sd-header::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(circle at 14% 26%,rgba(244,168,0,.55) 0,rgba(244,168,0,0) 38%);}
+  .sd-header::after{content:"";position:absolute;inset:0;opacity:.10;pointer-events:none;
+    background-image:radial-gradient(circle at 70% 22%,#fff 0 1.4px,transparent 2.2px),
+                     radial-gradient(circle at 84% 40%,#fff 0 1px,transparent 1.8px),
+                     radial-gradient(circle at 58% 14%,#fff 0 1.2px,transparent 2px);
+    background-size:240px 240px,200px 200px,300px 300px;}
+  .sd-header-inner{position:relative;max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:1.2rem;}
+  .sd-crest{flex:0 0 auto;width:64px;height:64px;border-radius:10px;background:#fff;padding:6px;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  .sd-crest svg{width:100%;height:100%;display:block;border-radius:4px;}
+  .sd-titleblock{flex:1;min-width:0;}
+  .sd-eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.9;font-weight:600;}
+  .sd-title{font-size:1.55rem;font-weight:800;line-height:1.2;margin-top:.15rem;}
+  .sd-subtitle{font-size:.95rem;opacity:.92;margin-top:.25rem;}
+  .sd-meta{font-size:.78rem;opacity:.8;margin-top:.4rem;}
+  .sd-stripe{height:6px;display:flex;} .sd-stripe span{flex:1;}
+  .container{max-width:1180px;margin:0 auto;padding:0 1.2rem 2rem;}
+  .big-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:-4rem 0 1.5rem;position:relative;z-index:1;}
+  .big-card{background:var(--card);border-radius:14px;padding:1.4rem 1.2rem;box-shadow:var(--shadow);text-align:center;border-top:4px solid var(--sd-gold);}
+  .big-card .num{font-size:2.1rem;font-weight:800;line-height:1.1;color:var(--sd-gold-dark);}
+  .big-card .label{font-size:.82rem;color:var(--muted);margin-top:.4rem;line-height:1.35;}
+  .big-card.accent{border-top-color:var(--sd-red);} .big-card.accent .num{color:var(--sd-red);}
+  .big-card.good{border-top-color:var(--green);} .big-card.good .num{color:var(--green);}
+  .big-card.warn{border-top-color:var(--amber);} .big-card.warn .num{color:var(--amber);}
+  .big-card.bad{border-top-color:var(--red);} .big-card.bad .num{color:var(--red);}
+  .big-card.blue{border-top-color:var(--sd-blue);} .big-card.blue .num{color:var(--sd-blue-dark);}
+  .big-card.dark{border-top-color:var(--sd-black);} .big-card.dark .num{color:var(--sd-black);}
+  .section{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:1.8rem;margin-bottom:1.5rem;}
+  .section.bordered{border-left:5px solid var(--sd-red);}
+  .section.bordered-gold{border-left:5px solid var(--sd-gold);}
+  .section.bordered-blue{border-left:5px solid var(--sd-blue);}
+  .section.bordered-black{border-left:5px solid var(--sd-black);}
+  .section h2{font-size:1.2rem;font-weight:700;margin-bottom:.15rem;color:var(--sd-blue-dark);}
+  .section .lead{font-size:.93rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.55;}
+  .section h3{font-size:1rem;font-weight:600;margin:1.2rem 0 .5rem;color:var(--sd-black);}
+  .chart-wide{position:relative;height:320px;margin:1rem 0;}
+  .chart-half{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .chart-box{position:relative;height:300px;}
+  @media(max-width:700px){.chart-half{grid-template-columns:1fr;}}
+  .traffic{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  @media(max-width:600px){.traffic{grid-template-columns:1fr;}}
+  .tl{border-radius:12px;padding:1.05rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;}
+  .tl .dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;margin-top:2px;}
+  .tl .dot.red{background:var(--red);} .tl .dot.amber{background:var(--amber);}
+  .tl .dot.green{background:var(--green);} .tl .dot.blue{background:var(--sd-blue);} .tl .dot.gold{background:var(--sd-gold);}
+  .tl .info{font-size:.88rem;line-height:1.5;}
+  .tl .info strong{display:block;font-size:.95rem;margin-bottom:.15rem;color:var(--text);}
+  .tl-red{background:#fef2f2;border:1px solid #fecaca;}
+  .tl-amber{background:#fffbeb;border:1px solid #fde68a;}
+  .tl-green{background:#f0fdf4;border:1px solid #bbf7d0;}
+  .tl-blue{background:#eff8fd;border:1px solid #bae0f3;}
+  .tl-gold{background:#fff8e8;border:1px solid #f6e0a6;}
+  .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0;}
+  @media(max-width:800px){.actions{grid-template-columns:1fr;}}
+  .action-box{border-radius:12px;padding:1.3rem;}
+  .action-box h4{font-size:.95rem;font-weight:700;margin-bottom:.5rem;}
+  .action-box p{font-size:.86rem;line-height:1.55;}
+  .action-box.ops{background:#eff8fd;border:1px solid #bae0f3;} .action-box.ops h4{color:var(--sd-blue-dark);}
+  .action-box.res{background:#f0fdf4;border:1px solid #bbf7d0;} .action-box.res h4{color:#15803d;}
+  .action-box.perf{background:#fff8e8;border:1px solid #f6e0a6;} .action-box.perf h4{color:#92400e;}
+  .simple-table{width:100%;border-collapse:collapse;font-size:.88rem;margin:1rem 0;}
+  .simple-table th,.simple-table td{padding:.7rem .8rem;text-align:left;border-bottom:1px solid var(--border);}
+  .simple-table th{background:#fbf3e3;font-weight:600;color:var(--sd-red-dark);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;}
+  .simple-table tr:hover td{background:#fdfbf7;}
+  .simple-table td.r,.simple-table th.r{text-align:right;}
+  .pill{display:inline-block;padding:.2rem .65rem;border-radius:20px;font-size:.74rem;font-weight:600;}
+  .pill-red{background:#fef2f2;color:#991b1b;} .pill-amber{background:#fef3c7;color:#92400e;}
+  .pill-green{background:#dcfce7;color:#166534;} .pill-blue{background:#e1f1fb;color:var(--sd-blue-dark);} .pill-gold{background:#fdedc7;color:#8a5a00;}
+  .callout{background:linear-gradient(135deg,#fef2f2,#fff1f2);border:1px solid #fecaca;border-radius:12px;padding:1.3rem;margin:1.2rem 0;text-align:center;}
+  .callout .big{font-size:1.8rem;font-weight:800;color:var(--sd-red);}
+  .callout p{font-size:.92rem;margin-top:.3rem;color:var(--text);}
+  .callout-gold{background:linear-gradient(135deg,#fff8e8,#fffaf0);border:1px solid #f6e0a6;} .callout-gold .big{color:var(--sd-gold-dark);}
+  .callout-blue{background:linear-gradient(135deg,#eff8fd,#f0fbff);border:1px solid #bae0f3;} .callout-blue .big{color:var(--sd-blue-dark);}
+  .nav-links{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 0;}
+  .nav-links a{font-size:.8rem;text-decoration:none;color:var(--sd-blue-dark);background:#eef6fb;border:1px solid #cfe6f4;border-radius:20px;padding:.3rem .8rem;font-weight:600;}
+  .nav-links a:hover{background:#dcedf7;}
+  .sd-footer-stripe{height:5px;display:flex;} .sd-footer-stripe span{flex:1;}
+  .sd-footer-text{text-align:center;padding:1.4rem 1rem 2rem;color:var(--muted);font-size:.8rem;}
+  .sd-footer-text strong{color:var(--sd-red-dark);}
+</style>
+</head>
+<body>
+
+<header class="sd-header">
+  <div class="sd-header-inner">
+    <div class="sd-crest" aria-label="Sandaun crest">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <polygon id="sdstar" points="0,-3 0.7,-0.95 2.85,-0.95 1.1,0.35 1.75,2.4 0,1.15 -1.75,2.4 -1.1,0.35 -2.85,-0.95 -0.7,-0.95" fill="#ffffff"/>
+        </defs>
+        <polygon points="0,0 100,0 0,100" fill="#1A1A1A"/>
+        <polygon points="100,0 100,100 0,100" fill="#D62027"/>
+        <g stroke="#F4A800" stroke-width="2.6" stroke-linecap="round">
+          <line x1="32" y1="44" x2="32" y2="24"/><line x1="32" y1="44" x2="19" y2="30"/>
+          <line x1="32" y1="44" x2="45" y2="30"/><line x1="32" y1="44" x2="13" y2="40"/>
+          <line x1="32" y1="44" x2="51" y2="40"/>
+        </g>
+        <circle cx="32" cy="45" r="10" fill="#1C8FD1" stroke="#F4A800" stroke-width="2.2"/>
+        <use href="#sdstar" x="52" y="11"/><use href="#sdstar" x="66" y="17"/><use href="#sdstar" x="80" y="10"/>
+        <use href="#sdstar" x="58" y="27"/><use href="#sdstar" x="46" y="14"/><use href="#sdstar" x="73" y="26"/>
+        <g fill="none" stroke="#FCD116" stroke-width="2.4" stroke-linecap="round">
+          <path d="M64 84 q11 -2 20 -15"/><path d="M64 84 q13 1 22 -8"/><path d="M64 84 q12 5 23 -1"/>
+        </g>
+        <circle cx="62" cy="84" r="4.3" fill="#FCD116"/>
+        <path d="M58 82.5 l-6 -1 l6 -2.4 z" fill="#FCD116"/>
+      </svg>
+    </div>
+    <div class="sd-titleblock">
+      <div class="sd-eyebrow">Sandaun Province &middot; Department of Education</div>
+      <div class="sd-title">Data Quality &amp; Completeness</div>
+      <div class="sd-subtitle">How much of the 2025 census can we trust, where the gaps are, and what to fix before the next return &mdash; for the Provincial Education Board</div>
+      <div class="sd-meta">524 schools &bull; 89,730 students &bull; 4 districts &bull; 2025 census</div>
+    </div>
+  </div>
+</header>
+<div class="sd-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+
+<div class="container">
+
+  <div class="big-cards">
+    <div class="big-card"><div class="num">524</div><div class="label">Schools returned the 2025 census</div></div>
+    <div class="big-card bad"><div class="num">1</div><div class="label">Ghost school: 201 students, 0 teachers</div></div>
+    <div class="big-card warn"><div class="num">106</div><div class="label">Schools missing electricity data (21%)</div></div>
+    <div class="big-card accent"><div class="num">~21%</div><div class="label">Gaps on key fields (power, water, registration)</div></div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="section bordered-gold">
+    <h2>Can we trust the 2025 census?</h2>
+    <p class="lead">Mostly yes &mdash; but with named exceptions the Board must verify before acting on them. 524 schools returned a census; coverage is good. The problems are concentrated: a handful of impossible records, predictable missing fields on power and water, and a teacher count that comes out three different ways depending on which raw table you sum. This report lists every exception by name so the figures used elsewhere in the suite can be read with confidence.</p>
+    <div class="traffic">
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Coverage is strong</strong>524 schools returned a census. After de-duplicating repeated EMIS codes, 521 schools carry the enrolment used for analysis.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>One ghost school</strong>Mapul Primary (Aitape/Lumi) records 201 students but 0 teachers. This is impossible and needs a field visit.</div></div>
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Power &amp; water fields are patchy</strong>Electricity is &ldquo;Information missing&rdquo; at 106 schools (21%); water source is blank at many of the 141 critical-water schools.</div></div>
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>The teacher count is ambiguous</strong>Three defensible methods give 2,131 / 2,011 / 2,344. Document which one you mean before quoting it.</div></div>
+    </div>
+    <div class="nav-links">
+      <a href="Sandaun_Executive_Dashboard.html">&uarr; Executive</a>
+      <a href="Sandaun_Teacher_Analysis.html">Teachers &rarr;</a>
+      <a href="Sandaun_Infrastructure_Analysis.html">Infrastructure &rarr;</a>
+      <a href="Sandaun_School_Risk_Index.html">School risk index &rarr;</a>
+      <a href="Sandaun_PEIP_Progress_Report.html">PEIP progress &rarr;</a>
+    </div>
+  </div>
+
+  <!-- COVERAGE & DUPLICATES -->
+  <div class="section bordered-blue">
+    <h2>How many schools, and how many rows did we start with?</h2>
+    <p class="lead">The census arrives as three separate raw tables, and none of them holds exactly one row per school. Some schools appear twice under a repeated EMIS code; teacher details run one row per teacher. We de-duplicated EMIS codes (keeping the row with the larger enrolment) so analysis runs on one row per school.</p>
+    <div class="chart-half">
+      <div class="chart-box"><canvas id="rawBars"></canvas></div>
+      <div>
+        <table class="simple-table">
+          <thead><tr><th>Raw table</th><th class="r">Rows</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Students &amp; Teachers</strong></td><td class="r">691</td><td>More rows than schools &mdash; repeated EMIS codes</td></tr>
+            <tr><td><strong>Infrastructure</strong></td><td class="r">529</td><td>Roughly one per school</td></tr>
+            <tr><td><strong>Teacher details</strong></td><td class="r">2,011</td><td>One row per teacher, not per school</td></tr>
+            <tr><td><strong>Schools (census returns)</strong></td><td class="r">524</td><td>Distinct schools that returned</td></tr>
+            <tr><td><strong>Schools used for enrolment</strong></td><td class="r">521</td><td>After de-duplicating EMIS codes</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:.82rem;color:var(--muted);margin-top:.5rem;">De-duplication rule: where one EMIS code appeared more than once, we kept the row with the <strong>larger enrolment</strong>. This drops 524 returned schools to 521 with usable enrolment.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPOSSIBLE VALUES -->
+  <div class="section bordered">
+    <h2>Which records are impossible on their face?</h2>
+    <p class="lead">Some rows describe situations that cannot exist &mdash; students with no teacher, or one teacher against hundreds of pupils. These are not findings about the schools; they are flags for verification. Each is named below so the Board can field-check rather than guess.</p>
+    <div class="callout"><div class="big">Mapul Primary &mdash; 201 students, 0 teachers</div><p>A &ldquo;ghost school&rdquo; in Aitape/Lumi: enrolment is recorded but no teacher is on the books. Either teachers are unrecorded or the posting has lapsed &mdash; both need a field visit.</p></div>
+    <h3>Ten single-teacher schools with more than 100 pupils</h3>
+    <table class="simple-table">
+      <thead><tr><th>School</th><th class="r">Pupils</th><th class="r">Teachers</th><th>Flag</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mokweitami Elementary</strong></td><td class="r">257</td><td class="r">1</td><td><span class="pill pill-red">Verify</span></td></tr>
+        <tr><td><strong>Fiyak Primary</strong></td><td class="r">191</td><td class="r">1</td><td><span class="pill pill-red">Verify</span></td></tr>
+        <tr><td><strong>Yeftim Primary</strong></td><td class="r">190</td><td class="r">1</td><td><span class="pill pill-red">Verify</span></td></tr>
+        <tr><td><strong>Walwo Elementary</strong></td><td class="r">189</td><td class="r">1</td><td><span class="pill pill-red">Verify</span></td></tr>
+        <tr><td><strong>Walayen Elementary</strong></td><td class="r">161</td><td class="r">1</td><td><span class="pill pill-amber">Verify</span></td></tr>
+        <tr><td><strong>Warkakik Elementary</strong></td><td class="r">140</td><td class="r">1</td><td><span class="pill pill-amber">Verify</span></td></tr>
+        <tr><td><strong>Yikilou Primary</strong></td><td class="r">140</td><td class="r">1</td><td><span class="pill pill-amber">Verify</span></td></tr>
+        <tr><td><strong>Pino Elementary</strong></td><td class="r">132</td><td class="r">1</td><td><span class="pill pill-amber">Verify</span></td></tr>
+        <tr><td><strong>Busulmin</strong></td><td class="r">128</td><td class="r">1</td><td><span class="pill pill-amber">Verify</span></td></tr>
+        <tr><td><strong>Iafar Community</strong></td><td class="r">111</td><td class="r">1</td><td><span class="pill pill-amber">Verify</span></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:.82rem;color:var(--muted);">A single teacher cannot run a school of this size. Either teachers went unrecorded (a data problem) or the school is genuinely abandoned by staff (a posting problem). Both demand a visit.</p>
+    <h3>One enrolment outlier inflating the pupil&ndash;teacher ratio</h3>
+    <div class="callout-blue callout"><div class="big">Holy Trinity / Baro Primary &mdash; PTR 358</div><p>Records 4,656 enrolment against 13 teachers. A PTR of 358 is almost certainly a data-entry error with enrolment overstated. Treat this school&rsquo;s enrolment as unverified until checked.</p></div>
+  </div>
+
+  <!-- MISSING FIELDS -->
+  <div class="section bordered-black">
+    <h2>Which fields are most often missing?</h2>
+    <p class="lead">Missing data clusters in predictable places &mdash; the infrastructure and teacher-registration fields that enumerators reach last. We treat the sentinel value 999 as missing, and &ldquo;Information missing&rdquo; or blank cells as failing. Electricity is the worst offender at 106 schools.</p>
+    <div class="chart-wide"><canvas id="missingBars"></canvas></div>
+    <div class="traffic">
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Electricity &mdash; 106 schools (21%)</strong>The single largest gap. One in five schools did not report any power status.</div></div>
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Water source &mdash; many of 141 critical schools</strong>Water source is blank at many of the 141 schools already flagged for a critical water situation.</div></div>
+      <div class="tl tl-gold"><div class="dot gold"></div><div class="info"><strong>Teacher registration &mdash; 53 missing</strong>53 teacher records carry no registration status.</div></div>
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Teacher qualification &mdash; 40 missing (2%)</strong>Qualification is the most complete field: only 2% of teacher records lack it.</div></div>
+    </div>
+  </div>
+
+  <!-- TEACHER COUNT -->
+  <div class="section bordered">
+    <h2>How many teachers does the province have? It depends how you count.</h2>
+    <p class="lead">Three methods each produce a defensible total, and they disagree by over 300. We do not pick one silently &mdash; the Board should know which number is being quoted and why. Summing per-school Prep&ndash;G8 staff gives the most conservative figure; the compiled headline is the highest.</p>
+    <div class="chart-half">
+      <div class="chart-box"><canvas id="teacherBars"></canvas></div>
+      <div>
+        <table class="simple-table">
+          <thead><tr><th>Method</th><th class="r">Teachers</th><th>What it sums</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Per-school Prep&ndash;G8</strong></td><td class="r">2,131</td><td>Grade-level staff totals added across schools</td></tr>
+            <tr><td><strong>Teacher-detail records</strong></td><td class="r">2,011</td><td>Individual teacher rows in the detail table</td></tr>
+            <tr><td><strong>Compiled headline</strong></td><td class="r">2,344</td><td>The aggregate figure on the summary return</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:.82rem;color:var(--muted);margin-top:.5rem;">The 333-teacher spread between the lowest (2,011) and highest (2,344) reflects teachers counted on the summary return but not listed individually, and grade-staff totals that include non-classroom roles. Until reconciled, quote <strong>2,131</strong> for per-school analysis and state the source.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYNTHETIC COHORT -->
+  <div class="section bordered-gold">
+    <h2>Why do some grades appear to grow more than 100%?</h2>
+    <p class="lead">A few grade-to-grade transition ratios exceed 100% &mdash; the province as a whole shows G7&rarr;G8 at 107%, and Vanimo/Green River shows G6&rarr;G7 at 181%. These are not real growth. They are artefacts of comparing different grades in a single census year, where re-entry, repetition and in-migration inflate the upper grade.</p>
+    <div class="chart-wide"><canvas id="cohortBars"></canvas></div>
+    <div class="traffic">
+      <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>What we are doing</strong>Comparing this year&rsquo;s Grade 7 with this year&rsquo;s Grade 8 &mdash; two different sets of children, not the same cohort tracked over time.</div></div>
+      <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>Why it can exceed 100%</strong>Repeaters, returning drop-outs, and children moving in from other areas can make an upper grade larger than the lower grade was this year.</div></div>
+    </div>
+    <p style="font-size:.82rem;color:var(--muted);">Treat survival and transition figures across the suite as synthetic-cohort estimates from one census, not as tracked cohorts. They show the shape of attrition, not exact head-counts of individual children.</p>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="section bordered-blue">
+    <h2>What to fix before the 2026 return</h2>
+    <p class="lead">Three moves would close most of these gaps at source, so the next census needs far less cleaning.</p>
+    <div class="actions">
+      <div class="action-box ops"><h4>Validation rules at data entry</h4><p>Reject impossible rows on entry: enrolment with zero teachers, a PTR above ~80, or a single teacher above 60 pupils. Block 999 and blanks on key fields, and flag duplicate EMIS codes before submission.</p></div>
+      <div class="action-box res"><h4>Field-verify the named schools</h4><p>Visit Mapul Primary (ghost school), the 10 single-teacher schools above 100 pupils, and Holy Trinity / Baro Primary (PTR 358). Confirm enrolment and staffing on the ground, then correct the record.</p></div>
+      <div class="action-box perf"><h4>Make key fields mandatory</h4><p>Require electricity, water source, and teacher registration before a return can be accepted &mdash; the fields missing at 106, 141 and 53 schools respectively. No submission should pass with these blank.</p></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="sd-footer-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+  <div class="sd-footer-text">
+    <strong>Sandaun Education</strong> &middot; Data Quality &amp; Completeness Report &middot; 2025 Annual School Census<br>
+    <span style="font-size:.72rem;">Source: PNG NDoE 2025 Annual School Census, Sandaun (West Sepik) rows. Sentinel value 999 treated as missing; &ldquo;Information missing&rdquo; and blanks treated as failing. Transition ratios are synthetic-cohort estimates from a single census year, not tracked cohorts.</span>
+  </div>
+</footer>
+
+<script>
+const SD = {
+  gold:'#F4A800', goldDark:'#B97400', orange:'#E0651E',
+  red:'#D62027', redDark:'#8E1418', blue:'#1C8FD1', blueDark:'#0B5C8A',
+  black:'#1A1A1A', pngGold:'#FCD116',
+  green:'#16a34a', amber:'#d97706', alertRed:'#dc2626',
+  teal:'#0d9488', pink:'#ec4899', grey:'#94a3b8'
+};
+SD.series = [SD.gold, SD.blue, SD.red, SD.teal, SD.orange, SD.pink, SD.grey];
+Chart.defaults.font.family = "'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size = 13;
+Chart.defaults.color = '#101828';
+Chart.defaults.plugins.legend.display = false;
+
+// Raw row counts vs schools
+new Chart(document.getElementById('rawBars'),{
+  type:'bar',
+  data:{labels:['Students &\nTeachers','Infrastructure','Teacher\ndetails','Census\nreturns','Used for\nenrolment'],
+    datasets:[{label:'Rows',data:[691,529,2011,524,521],
+      backgroundColor:[SD.orange,SD.gold,SD.grey,SD.blue,SD.green],borderRadius:6}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Raw rows per table vs distinct schools',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.y.toLocaleString()+' rows'}}},
+    scales:{y:{ticks:{callback:v=>v.toLocaleString()}},x:{grid:{display:false}}}}
+});
+
+// Missing fields by count
+new Chart(document.getElementById('missingBars'),{
+  type:'bar',
+  data:{labels:['Electricity (21%)','Water source (within 141 critical)','Teacher registration','Teacher qualification (2%)'],
+    datasets:[{label:'Schools / records missing',data:[106,141,53,40],
+      backgroundColor:[SD.red,SD.orange,SD.amber,SD.green],borderRadius:5}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{title:{display:true,text:'Missing-field hotspots (count of schools / teacher records)',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.x.toLocaleString()+' missing'}}},
+    scales:{x:{ticks:{callback:v=>v.toLocaleString()}},y:{grid:{display:false}}}}
+});
+
+// Three teacher counts
+new Chart(document.getElementById('teacherBars'),{
+  type:'bar',
+  data:{labels:['Per-school\nPrep–G8','Teacher-detail\nrecords','Compiled\nheadline'],
+    datasets:[{label:'Teachers',data:[2131,2011,2344],
+      backgroundColor:[SD.blue,SD.gold,SD.red],borderRadius:6}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Three methods, three teacher counts',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.y.toLocaleString()+' teachers'}}},
+    scales:{y:{suggestedMin:1800,suggestedMax:2450,ticks:{callback:v=>v.toLocaleString()}},x:{grid:{display:false}}}}
+});
+
+// Synthetic-cohort >100% transitions
+new Chart(document.getElementById('cohortBars'),{
+  type:'bar',
+  data:{labels:['Province G7→G8','Vanimo/Green River G6→G7'],
+    datasets:[{label:'Apparent transition (%)',data:[107,181],
+      backgroundColor:[SD.amber,SD.red],borderRadius:6}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Transitions above 100% — artefacts, not real growth',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.y+'% (re-entry / repetition / in-migration)'}}},
+    scales:{y:{suggestedMax:200,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sandaun — Enrolment Analysis</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --sd-gold:#F4A800;--sd-gold-dark:#B97400;--sd-orange:#E0651E;
+    --sd-red:#D62027;--sd-red-dark:#8E1418;
+    --sd-blue:#1C8FD1;--sd-blue-dark:#0B5C8A;
+    --sd-black:#1A1A1A;--sd-white:#FFFFFF;--png-gold:#FCD116;
+    --green:#16a34a;--amber:#d97706;--red:#dc2626;--teal:#0d9488;--pink:#ec4899;
+    --bg:#faf7f2;--card:#fff;--text:#101828;--muted:#6b7280;--border:#e7e2d9;
+    --shadow:0 2px 10px rgba(120,60,0,.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;}
+  .sd-header{position:relative;color:#fff;padding:1.8rem 1.5rem 5.5rem;overflow:hidden;text-shadow:0 1px 3px rgba(0,0,0,.35);
+    background:linear-gradient(135deg,#E0651E 0%,#C2410C 34%,#8E1418 58%,#3A1410 80%,#1A1A1A 100%);}
+  .sd-header::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(circle at 14% 26%,rgba(244,168,0,.55) 0,rgba(244,168,0,0) 38%);}
+  .sd-header::after{content:"";position:absolute;inset:0;opacity:.10;pointer-events:none;
+    background-image:radial-gradient(circle at 70% 22%,#fff 0 1.4px,transparent 2.2px),
+                     radial-gradient(circle at 84% 40%,#fff 0 1px,transparent 1.8px),
+                     radial-gradient(circle at 58% 14%,#fff 0 1.2px,transparent 2px);
+    background-size:240px 240px,200px 200px,300px 300px;}
+  .sd-header-inner{position:relative;max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:1.2rem;}
+  .sd-crest{flex:0 0 auto;width:64px;height:64px;border-radius:10px;background:#fff;padding:6px;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  .sd-crest svg{width:100%;height:100%;display:block;border-radius:4px;}
+  .sd-titleblock{flex:1;min-width:0;}
+  .sd-eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.9;font-weight:600;}
+  .sd-title{font-size:1.55rem;font-weight:800;line-height:1.2;margin-top:.15rem;}
+  .sd-subtitle{font-size:.95rem;opacity:.92;margin-top:.25rem;}
+  .sd-meta{font-size:.78rem;opacity:.8;margin-top:.4rem;}
+  .sd-stripe{height:6px;display:flex;} .sd-stripe span{flex:1;}
+  .container{max-width:1180px;margin:0 auto;padding:0 1.2rem 2rem;}
+  .big-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:-4rem 0 1.5rem;position:relative;z-index:1;}
+  .big-card{background:var(--card);border-radius:14px;padding:1.4rem 1.2rem;box-shadow:var(--shadow);text-align:center;border-top:4px solid var(--sd-gold);}
+  .big-card .num{font-size:2.1rem;font-weight:800;line-height:1.1;color:var(--sd-gold-dark);}
+  .big-card .label{font-size:.82rem;color:var(--muted);margin-top:.4rem;line-height:1.35;}
+  .big-card.accent{border-top-color:var(--sd-red);} .big-card.accent .num{color:var(--sd-red);}
+  .big-card.good{border-top-color:var(--green);} .big-card.good .num{color:var(--green);}
+  .big-card.warn{border-top-color:var(--amber);} .big-card.warn .num{color:var(--amber);}
+  .big-card.bad{border-top-color:var(--red);} .big-card.bad .num{color:var(--red);}
+  .big-card.blue{border-top-color:var(--sd-blue);} .big-card.blue .num{color:var(--sd-blue-dark);}
+  .big-card.dark{border-top-color:var(--sd-black);} .big-card.dark .num{color:var(--sd-black);}
+  .section{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:1.8rem;margin-bottom:1.5rem;}
+  .section.bordered{border-left:5px solid var(--sd-red);}
+  .section.bordered-gold{border-left:5px solid var(--sd-gold);}
+  .section.bordered-blue{border-left:5px solid var(--sd-blue);}
+  .section.bordered-black{border-left:5px solid var(--sd-black);}
+  .section h2{font-size:1.2rem;font-weight:700;margin-bottom:.15rem;color:var(--sd-blue-dark);}
+  .section .lead{font-size:.93rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.55;}
+  .section h3{font-size:1rem;font-weight:600;margin:1.2rem 0 .5rem;color:var(--sd-black);}
+  .chart-wide{position:relative;height:320px;margin:1rem 0;}
+  .chart-half{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .chart-box{position:relative;height:300px;}
+  @media(max-width:700px){.chart-half{grid-template-columns:1fr;}}
+  .traffic{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  @media(max-width:600px){.traffic{grid-template-columns:1fr;}}
+  .tl{border-radius:12px;padding:1.05rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;}
+  .tl .dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;margin-top:2px;}
+  .tl .dot.red{background:var(--red);} .tl .dot.amber{background:var(--amber);}
+  .tl .dot.green{background:var(--green);} .tl .dot.blue{background:var(--sd-blue);} .tl .dot.gold{background:var(--sd-gold);}
+  .tl .info{font-size:.88rem;line-height:1.5;}
+  .tl .info strong{display:block;font-size:.95rem;margin-bottom:.15rem;color:var(--text);}
+  .tl-red{background:#fef2f2;border:1px solid #fecaca;}
+  .tl-amber{background:#fffbeb;border:1px solid #fde68a;}
+  .tl-green{background:#f0fdf4;border:1px solid #bbf7d0;}
+  .tl-blue{background:#eff8fd;border:1px solid #bae0f3;}
+  .tl-gold{background:#fff8e8;border:1px solid #f6e0a6;}
+  .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0;}
+  @media(max-width:800px){.actions{grid-template-columns:1fr;}}
+  .action-box{border-radius:12px;padding:1.3rem;}
+  .action-box h4{font-size:.95rem;font-weight:700;margin-bottom:.5rem;}
+  .action-box p{font-size:.86rem;line-height:1.55;}
+  .action-box.ops{background:#eff8fd;border:1px solid #bae0f3;} .action-box.ops h4{color:var(--sd-blue-dark);}
+  .action-box.res{background:#f0fdf4;border:1px solid #bbf7d0;} .action-box.res h4{color:#15803d;}
+  .action-box.perf{background:#fff8e8;border:1px solid #f6e0a6;} .action-box.perf h4{color:#92400e;}
+  .simple-table{width:100%;border-collapse:collapse;font-size:.88rem;margin:1rem 0;}
+  .simple-table th,.simple-table td{padding:.7rem .8rem;text-align:left;border-bottom:1px solid var(--border);}
+  .simple-table th{background:#fbf3e3;font-weight:600;color:var(--sd-red-dark);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;}
+  .simple-table tr:hover td{background:#fdfbf7;}
+  .simple-table td.r,.simple-table th.r{text-align:right;}
+  .pill{display:inline-block;padding:.2rem .65rem;border-radius:20px;font-size:.74rem;font-weight:600;}
+  .pill-red{background:#fef2f2;color:#991b1b;} .pill-amber{background:#fef3c7;color:#92400e;}
+  .pill-green{background:#dcfce7;color:#166534;} .pill-blue{background:#e1f1fb;color:var(--sd-blue-dark);} .pill-gold{background:#fdedc7;color:#8a5a00;}
+  .callout{background:linear-gradient(135deg,#fef2f2,#fff1f2);border:1px solid #fecaca;border-radius:12px;padding:1.3rem;margin:1.2rem 0;text-align:center;}
+  .callout .big{font-size:1.8rem;font-weight:800;color:var(--sd-red);}
+  .callout p{font-size:.92rem;margin-top:.3rem;color:var(--text);}
+  .callout-gold{background:linear-gradient(135deg,#fff8e8,#fffaf0);border:1px solid #f6e0a6;} .callout-gold .big{color:var(--sd-gold-dark);}
+  .callout-blue{background:linear-gradient(135deg,#eff8fd,#f0fbff);border:1px solid #bae0f3;} .callout-blue .big{color:var(--sd-blue-dark);}
+  .nav-links{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 0;}
+  .nav-links a{font-size:.8rem;text-decoration:none;color:var(--sd-blue-dark);background:#eef6fb;border:1px solid #cfe6f4;border-radius:20px;padding:.3rem .8rem;font-weight:600;}
+  .nav-links a:hover{background:#dcedf7;}
+  .sd-footer-stripe{height:5px;display:flex;} .sd-footer-stripe span{flex:1;}
+  .sd-footer-text{text-align:center;padding:1.4rem 1rem 2rem;color:var(--muted);font-size:.8rem;}
+  .sd-footer-text strong{color:var(--sd-red-dark);}
+</style>
+</head>
+<body>
+
+<header class="sd-header">
+  <div class="sd-header-inner">
+    <div class="sd-crest" aria-label="Sandaun crest">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <polygon id="sdstar" points="0,-3 0.7,-0.95 2.85,-0.95 1.1,0.35 1.75,2.4 0,1.15 -1.75,2.4 -1.1,0.35 -2.85,-0.95 -0.7,-0.95" fill="#ffffff"/>
+        </defs>
+        <polygon points="0,0 100,0 0,100" fill="#1A1A1A"/>
+        <polygon points="100,0 100,100 0,100" fill="#D62027"/>
+        <g stroke="#F4A800" stroke-width="2.6" stroke-linecap="round">
+          <line x1="32" y1="44" x2="32" y2="24"/><line x1="32" y1="44" x2="19" y2="30"/>
+          <line x1="32" y1="44" x2="45" y2="30"/><line x1="32" y1="44" x2="13" y2="40"/>
+          <line x1="32" y1="44" x2="51" y2="40"/>
+        </g>
+        <circle cx="32" cy="45" r="10" fill="#1C8FD1" stroke="#F4A800" stroke-width="2.2"/>
+        <use href="#sdstar" x="52" y="11"/><use href="#sdstar" x="66" y="17"/><use href="#sdstar" x="80" y="10"/>
+        <use href="#sdstar" x="58" y="27"/><use href="#sdstar" x="46" y="14"/><use href="#sdstar" x="73" y="26"/>
+        <g fill="none" stroke="#FCD116" stroke-width="2.4" stroke-linecap="round">
+          <path d="M64 84 q11 -2 20 -15"/><path d="M64 84 q13 1 22 -8"/><path d="M64 84 q12 5 23 -1"/>
+        </g>
+        <circle cx="62" cy="84" r="4.3" fill="#FCD116"/>
+        <path d="M58 82.5 l-6 -1 l6 -2.4 z" fill="#FCD116"/>
+      </svg>
+    </div>
+    <div class="sd-titleblock">
+      <div class="sd-eyebrow">Sandaun Province &middot; Department of Education</div>
+      <div class="sd-title">Enrolment &amp; Student Flow</div>
+      <div class="sd-subtitle">Where children enter, where they are lost, and how few reach Grade 8 &mdash; for the Provincial Education Board</div>
+      <div class="sd-meta">524 schools &bull; 89,730 students &bull; 4 districts &bull; 2025 census</div>
+    </div>
+  </div>
+</header>
+<div class="sd-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+
+<div class="container">
+
+  <div class="big-cards">
+    <div class="big-card accent"><div class="num">89,730</div><div class="label">Students enrolled (Prep&ndash;Grade 8)</div></div>
+    <div class="big-card"><div class="num">524</div><div class="label">Schools in the 2025 census</div></div>
+    <div class="big-card bad"><div class="num">70%</div><div class="label">Of Grade 2 children reach Grade 3</div></div>
+    <div class="big-card warn"><div class="num">37%</div><div class="label">Survive Prep &rarr; Grade 8</div></div>
+  </div>
+
+  <!-- NAV -->
+  <div class="section bordered-gold">
+    <h2>Reading this dashboard</h2>
+    <p class="lead">This page answers one question: of the 89,730 children counted in the 2025 census, where are they, where do we lose them, and how many make it to Grade 8? Enrolment is large at the bottom and collapses through the primary years. The numbers below are built from a single census year &mdash; transition and survival are synthetic-cohort estimates, not tracked cohorts.</p>
+    <div class="nav-links">
+      <a href="Sandaun_Executive_Dashboard.html">&uarr; Executive</a>
+      <a href="Sandaun_Teacher_Analysis.html">Teachers &rarr;</a>
+      <a href="Sandaun_Infrastructure_Analysis.html">Infrastructure &rarr;</a>
+      <a href="Sandaun_Gender_Equity_Analysis.html">Gender equity &rarr;</a>
+      <a href="Sandaun_Feeder_Mapping.html">Feeder mapping &rarr;</a>
+      <a href="Sandaun_School_Risk_Index.html">School risk index &rarr;</a>
+    </div>
+  </div>
+
+  <!-- THE SHAPE OF THE SYSTEM -->
+  <div class="section bordered-blue">
+    <h2>The shape of the system: a heavy base that narrows fast</h2>
+    <p class="lead">How is enrolment distributed across the grades? Prep alone holds 18,100 children &mdash; more than a fifth of the whole system &mdash; and each grade above it is smaller than the last. The early-grade bulge is real demand: children turn up. The narrowing above Grade 2 is the system failing to hold them.</p>
+    <div class="chart-wide"><canvas id="gradeBars"></canvas></div>
+    <div class="traffic">
+      <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>The base is full</strong>Prep&ndash;Grade 2 hold 46,542 children &mdash; 52% of all enrolment sits in the first three grades. Demand for schooling is not the problem.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>The top is thin</strong>Grades 6&ndash;8 hold just 19,373 children &mdash; 22% of enrolment. By Grade 8 only 6,705 remain, fewer than half the Grade 1 intake.</div></div>
+    </div>
+  </div>
+
+  <!-- THE CLIFF -->
+  <div class="section bordered">
+    <h2>The Grade 2 &rarr; Grade 3 cliff</h2>
+    <p class="lead">Where is the sharpest loss? At every grade boundary we ask how many children carry forward. The answer is steady until Grade 2, then it falls off a cliff: only 70.2% of Grade 2 children appear in Grade 3 &mdash; the point where most children must move from an elementary school to a separate primary school.</p>
+    <div class="callout"><div class="big">3,699 children</div><p>are lost between Grade 2 (12,412) and Grade 3 (8,713) &mdash; only 70% make the step. This is the single worst transition in the system.</p></div>
+    <div class="chart-wide"><canvas id="transBars"></canvas></div>
+    <div class="traffic">
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Red &mdash; below 75% carry forward</strong>G1&rarr;G2 (77.4%) and G2&rarr;G3 (70.2%). The two worst steps are back to back, in the lower primary years.</div></div>
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Amber &mdash; 75% to 90% carry forward</strong>Prep&rarr;G1 (88.6%), G5&rarr;G6 (89.3%). Steady leakage that compounds grade on grade.</div></div>
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Green &mdash; 90% or more carry forward</strong>G3&rarr;G4 (90.9%), G4&rarr;G5 (90.8%), G6&rarr;G7 (97.4%). Once children survive the cliff, upper primary holds them better.</div></div>
+      <div class="tl tl-gold"><div class="dot gold"></div><div class="info"><strong>Data caveat &mdash; G7&rarr;G8 reads 107.3%</strong>This exceeds 100% and is not real growth; treat it as a synthetic-cohort artefact (see the data note below).</div></div>
+    </div>
+  </div>
+
+  <!-- SURVIVAL TO GRADE 8 -->
+  <div class="section bordered-black">
+    <h2>Survival to Grade 8: only 37% of the Prep class remains</h2>
+    <p class="lead">If we follow the Prep intake of 18,100 children up the grades, how many are still enrolled by Grade 8? Roughly 37% &mdash; 6,705 children. Almost two in three children who start school have left the system before Grade 8. The steepest part of the decline is the Grade 2&ndash;Grade 3 cliff.</p>
+    <div class="chart-half">
+      <div class="chart-box"><canvas id="survivalLine"></canvas></div>
+      <div class="chart-box"><canvas id="indexLine"></canvas></div>
+    </div>
+    <div class="callout callout-blue"><div class="big">18,100 &rarr; 6,705</div><p>From the Prep base to Grade 8, the system retains roughly 1 child in 3. Holding even 10 more points to Grade 8 would mean about 1,800 additional children completing primary school each year.</p></div>
+  </div>
+
+  <!-- DISTRICT COMPARISON -->
+  <div class="section bordered-blue">
+    <h2>The cliff is not the same in every district</h2>
+    <p class="lead">Which districts lose the most children at the Grade 2&ndash;Grade 3 step? Aitape/Lumi holds 81% of its Grade 2 children into Grade 3 and is the natural benchmark. Nuku is the pinch-point at 64% &mdash; the worst transition in the province &mdash; while Telefomin and Vanimo/Green River both sit at 69%.</p>
+    <div class="chart-wide"><canvas id="districtBars"></canvas></div>
+    <table class="simple-table">
+      <thead><tr><th>District</th><th class="r">Schools</th><th class="r">Students</th><th class="r">G2&rarr;G3</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aitape/Lumi</strong></td><td class="r">120</td><td class="r">20,985</td><td class="r">81%</td><td><span class="pill pill-green">Benchmark</span> best transition in the province</td></tr>
+        <tr><td><strong>Nuku</strong></td><td class="r">155</td><td class="r">25,309</td><td class="r">64%</td><td><span class="pill pill-red">Worst</span> sharpest loss at the cliff</td></tr>
+        <tr><td><strong>Telefomin</strong></td><td class="r">97</td><td class="r">12,413</td><td class="r">69%</td><td><span class="pill pill-amber">Watch</span> below province average</td></tr>
+        <tr><td><strong>Vanimo/Green River</strong></td><td class="r">152</td><td class="r">31,023</td><td class="r">69%</td><td><span class="pill pill-amber">Watch</span> most students, below average</td></tr>
+        <tr><td><strong>Province</strong></td><td class="r">524</td><td class="r">89,730</td><td class="r">70%</td><td><span class="pill pill-blue">Total</span> 4 districts combined</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DATA NOTE -->
+  <div class="section bordered-gold">
+    <h2>Data note: why one transition reads above 100%</h2>
+    <p class="lead">Why does the Grade 7&rarr;Grade 8 step show 107.3% when every other step loses children? Because these figures come from a single census year, not a tracked cohort. We compare this year's Grade 7 against this year's Grade 8 &mdash; a synthetic cohort. When more children sit in the higher grade than the lower one, the ratio passes 100%. It does not mean the system gained children.</p>
+    <div class="traffic">
+      <div class="tl tl-gold"><div class="dot gold"></div><div class="info"><strong>Re-entry and repetition</strong>Older children returning to school, or repeating Grade 8, inflate the Grade 8 count relative to Grade 7.</div></div>
+      <div class="tl tl-gold"><div class="dot gold"></div><div class="info"><strong>In-migration to larger schools</strong>Children moving in for upper primary &mdash; especially in Vanimo/Green River, where Grade 8 (3,339) exceeds Grade 7 (3,266) &mdash; lift the ratio.</div></div>
+      <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>Read transitions as a pattern, not a count</strong>Use the boundaries to find the worst leaks (the cliff at G2&rarr;G3), not to count exact children moving between two specific grades.</div></div>
+      <div class="tl tl-blue"><div class="dot blue"></div><div class="info"><strong>Survival is an estimate</strong>The 37% Prep&rarr;G8 figure is a cross-sectional ratio (6,705 &divide; 18,100), not a followed class &mdash; directionally robust, not exact.</div></div>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="section bordered">
+    <h2>What this means for retention in 2026</h2>
+    <p class="lead">The flow data points to one priority above all: hold children across the Grade 2&ndash;Grade 3 boundary, starting in Nuku where the loss is worst.</p>
+    <div class="actions">
+      <div class="action-box ops"><h4>Operations &mdash; bridge the cliff</h4><p>Target the Grade 2&rarr;Grade 3 boundary in Nuku (64%) first, then Telefomin and Vanimo/Green River (69%). Map which Grade 2 children have a primary school within reach and post staff to receive them.</p></div>
+      <div class="action-box res"><h4>Resources &mdash; follow the benchmark</h4><p>Study what Aitape/Lumi does to hold 81% across the cliff and replicate it. Concentrate support on the lower primary grades where the two worst steps (G1&rarr;G2, G2&rarr;G3) sit back to back.</p></div>
+      <div class="action-box perf"><h4>Performance &mdash; report survival</h4><p>Make Prep&rarr;Grade 8 survival (now 37%) and the G2&rarr;G3 transition the headline retention measures reported to the Board each year, by district, and watch them move.</p></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="sd-footer-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+  <div class="sd-footer-text">
+    <strong>Sandaun Education</strong> &middot; Enrolment &amp; Student Flow Analysis &middot; 2025 Annual School Census<br>
+    <span style="font-size:.72rem;">Source: PNG NDoE 2025 Annual School Census, Sandaun (West Sepik) rows. Figures rebuilt from per-grade returns; survival and transition are synthetic-cohort estimates from a single census year, not tracked cohorts.</span>
+  </div>
+</footer>
+
+<script>
+const SD = {
+  gold:'#F4A800', goldDark:'#B97400', orange:'#E0651E',
+  red:'#D62027', redDark:'#8E1418', blue:'#1C8FD1', blueDark:'#0B5C8A',
+  black:'#1A1A1A', pngGold:'#FCD116',
+  green:'#16a34a', amber:'#d97706', alertRed:'#dc2626',
+  teal:'#0d9488', pink:'#ec4899', grey:'#94a3b8'
+};
+SD.series = [SD.gold, SD.blue, SD.red, SD.teal, SD.orange, SD.pink, SD.grey];
+Chart.defaults.font.family = "'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size = 13;
+Chart.defaults.color = '#101828';
+Chart.defaults.plugins.legend.display = false;
+
+const grades = ['Prep','G1','G2','G3','G4','G5','G6','G7','G8'];
+const totals = [18100,16030,12412,8713,7916,7186,6419,6249,6705];
+const boys   = [9311,8473,6553,4635,4267,3817,3480,3377,3755];
+const girls  = [8789,7557,5859,4078,3649,3369,2939,2872,2950];
+
+// Enrolment by grade & sex (the early-grade bulge and collapse)
+new Chart(document.getElementById('gradeBars'),{
+  type:'bar',
+  data:{labels:grades,datasets:[
+    {label:'Boys',data:boys,backgroundColor:SD.blue,borderRadius:4},
+    {label:'Girls',data:girls,backgroundColor:SD.gold,borderRadius:4}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Enrolment by grade & sex — a heavy base that narrows above Grade 2',font:{size:13,weight:'bold'}},
+      legend:{display:true,position:'bottom'},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toLocaleString()}}},
+    scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{callback:v=>v.toLocaleString()}}}}
+});
+
+// Grade-to-grade transition coloured by severity
+const boundaries=['Prep→G1','G1→G2','G2→G3','G3→G4','G4→G5','G5→G6','G6→G7','G7→G8'];
+const trans=[88.6,77.4,70.2,90.9,90.8,89.3,97.4,107.3];
+new Chart(document.getElementById('transBars'),{
+  type:'bar',
+  data:{labels:boundaries,datasets:[{data:trans,
+    backgroundColor:trans.map(v=>v<75?SD.red:v<90?SD.amber:SD.green),borderRadius:5}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Grade-to-grade transition (%) — red <75 · amber <90 · green ≥90',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.y.toFixed(1)+'% carry forward'}}},
+    scales:{y:{suggestedMax:120,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}
+});
+
+// Survival from Prep to Grade 8 (counts)
+new Chart(document.getElementById('survivalLine'),{
+  type:'line',
+  data:{labels:grades,datasets:[{label:'Students enrolled',data:totals,
+    borderColor:SD.red,backgroundColor:'rgba(214,32,39,.10)',fill:true,tension:.25,
+    pointRadius:4,pointBackgroundColor:SD.red}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Enrolment from Prep to Grade 8 — 18,100 down to 6,705',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.y.toLocaleString()+' enrolled'}}},
+    scales:{y:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()}},x:{grid:{display:false}}}}
+});
+
+// Survival index (% of Prep base remaining)
+const survival = totals.map(v=>Math.round(v/totals[0]*1000)/10);
+new Chart(document.getElementById('indexLine'),{
+  type:'line',
+  data:{labels:grades,datasets:[{label:'% of Prep base',data:survival,
+    borderColor:SD.blueDark,backgroundColor:'rgba(28,143,209,.12)',fill:true,tension:.25,
+    pointRadius:4,pointBackgroundColor:SD.blueDark}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Survival to each grade (% of the Prep base) — 37% reach Grade 8',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.y.toFixed(1)+'% of Prep base'}}},
+    scales:{y:{beginAtZero:true,suggestedMax:100,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}
+});
+
+// District enrolment (province district order, bars coloured by G2→G3 status)
+const distNames=['Aitape/Lumi','Nuku','Telefomin','Vanimo/Green River'];
+const distStudents=[20985,25309,12413,31023];
+const distG2G3=[81,64,69,69];
+new Chart(document.getElementById('districtBars'),{
+  type:'bar',
+  data:{labels:distNames,
+    datasets:[{label:'Students',data:distStudents,
+      backgroundColor:distG2G3.map(v=>v<75?SD.red:v<90?SD.amber:SD.green),borderRadius:6}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{title:{display:true,text:'Students by district — bar colour shows the G2→G3 transition',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.x.toLocaleString()+' students · '+distG2G3[c.dataIndex]+'% G2→G3'}}},
+    scales:{x:{ticks:{callback:v=>v.toLocaleString()}},y:{grid:{display:false}}}}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sandaun (West Sepik) Province — simplified flag/crest.
+  The provincial flag is split diagonally: a black upper triangle bearing white
+  stars and a blue setting sun with gold rays, over a red lower triangle carrying
+  the gold Raggiana bird-of-paradise. "Sandaun" means "sun down" — the province is
+  the home of the sunset, PNG's westernmost province. Original simplified artwork
+  inspired by the public symbolism of the flag, not a copy of any reproduction.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <!-- unit 5-point star, point-up, centred on origin -->
+    <polygon id="sd-star" points="0,-3 0.7,-0.95 2.85,-0.95 1.1,0.35 1.75,2.4 0,1.15 -1.75,2.4 -1.1,0.35 -2.85,-0.95 -0.7,-0.95" fill="#ffffff"/>
+  </defs>
+
+  <!-- Diagonal field: black upper triangle, red lower triangle -->
+  <polygon points="0,0 100,0 0,100" fill="#1A1A1A"/>
+  <polygon points="100,0 100,100 0,100" fill="#D62027"/>
+
+  <!-- Setting sun: blue disk on the horizon with gold rays radiating up -->
+  <g stroke="#F4A800" stroke-width="2.6" stroke-linecap="round">
+    <line x1="32" y1="44" x2="32" y2="24"/>
+    <line x1="32" y1="44" x2="19" y2="30"/>
+    <line x1="32" y1="44" x2="45" y2="30"/>
+    <line x1="32" y1="44" x2="13" y2="40"/>
+    <line x1="32" y1="44" x2="51" y2="40"/>
+  </g>
+  <circle cx="32" cy="45" r="10" fill="#1C8FD1" stroke="#F4A800" stroke-width="2.2"/>
+
+  <!-- Six white stars (the six districts) in the black field -->
+  <use href="#sd-star" x="52" y="11"/>
+  <use href="#sd-star" x="66" y="17"/>
+  <use href="#sd-star" x="80" y="10"/>
+  <use href="#sd-star" x="58" y="27"/>
+  <use href="#sd-star" x="46" y="14"/>
+  <use href="#sd-star" x="73" y="26"/>
+
+  <!-- Gold bird-of-paradise over the red triangle -->
+  <g fill="none" stroke="#FCD116" stroke-width="2.4" stroke-linecap="round">
+    <path d="M64 84 q11 -2 20 -15"/>
+    <path d="M64 84 q13 1 22 -8"/>
+    <path d="M64 84 q12 5 23 -1"/>
+  </g>
+  <circle cx="62" cy="84" r="4.3" fill="#FCD116"/>
+  <path d="M58 82.5 l-6 -1 l6 -2.4 z" fill="#FCD116"/>
+</svg>

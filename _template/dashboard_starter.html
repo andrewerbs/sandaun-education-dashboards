@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sandaun — Dashboard Title</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --sd-gold:#F4A800;--sd-gold-dark:#B97400;--sd-orange:#E0651E;
+    --sd-red:#D62027;--sd-red-dark:#8E1418;
+    --sd-blue:#1C8FD1;--sd-blue-dark:#0B5C8A;
+    --sd-black:#1A1A1A;--sd-white:#FFFFFF;--png-gold:#FCD116;
+    --green:#16a34a;--amber:#d97706;--red:#dc2626;--teal:#0d9488;--pink:#ec4899;
+    --bg:#faf7f2;--card:#fff;--text:#101828;--muted:#6b7280;--border:#e7e2d9;
+    --shadow:0 2px 10px rgba(120,60,0,.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;}
+  .sd-header{position:relative;color:#fff;padding:1.8rem 1.5rem 5.5rem;overflow:hidden;text-shadow:0 1px 3px rgba(0,0,0,.35);
+    background:linear-gradient(135deg,#E0651E 0%,#C2410C 34%,#8E1418 58%,#3A1410 80%,#1A1A1A 100%);}
+  .sd-header::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(circle at 14% 26%,rgba(244,168,0,.55) 0,rgba(244,168,0,0) 38%);}
+  .sd-header::after{content:"";position:absolute;inset:0;opacity:.10;pointer-events:none;
+    background-image:radial-gradient(circle at 70% 22%,#fff 0 1.4px,transparent 2.2px),
+                     radial-gradient(circle at 84% 40%,#fff 0 1px,transparent 1.8px),
+                     radial-gradient(circle at 58% 14%,#fff 0 1.2px,transparent 2px);
+    background-size:240px 240px,200px 200px,300px 300px;}
+  .sd-header-inner{position:relative;max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:1.2rem;}
+  .sd-crest{flex:0 0 auto;width:64px;height:64px;border-radius:10px;background:#fff;padding:6px;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  .sd-crest svg{width:100%;height:100%;display:block;border-radius:4px;}
+  .sd-titleblock{flex:1;min-width:0;}
+  .sd-eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.9;font-weight:600;}
+  .sd-title{font-size:1.55rem;font-weight:800;line-height:1.2;margin-top:.15rem;}
+  .sd-subtitle{font-size:.95rem;opacity:.92;margin-top:.25rem;}
+  .sd-meta{font-size:.78rem;opacity:.8;margin-top:.4rem;}
+  .sd-stripe{height:6px;display:flex;} .sd-stripe span{flex:1;}
+  .container{max-width:1180px;margin:0 auto;padding:0 1.2rem 2rem;}
+  .big-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem;margin:-4rem 0 1.5rem;position:relative;z-index:1;}
+  .big-card{background:var(--card);border-radius:14px;padding:1.4rem 1.2rem;box-shadow:var(--shadow);text-align:center;border-top:4px solid var(--sd-gold);}
+  .big-card .num{font-size:2.1rem;font-weight:800;line-height:1.1;color:var(--sd-gold-dark);}
+  .big-card .label{font-size:.82rem;color:var(--muted);margin-top:.4rem;line-height:1.35;}
+  .big-card.accent{border-top-color:var(--sd-red);} .big-card.accent .num{color:var(--sd-red);}
+  .big-card.good{border-top-color:var(--green);} .big-card.good .num{color:var(--green);}
+  .big-card.warn{border-top-color:var(--amber);} .big-card.warn .num{color:var(--amber);}
+  .big-card.bad{border-top-color:var(--red);} .big-card.bad .num{color:var(--red);}
+  .big-card.blue{border-top-color:var(--sd-blue);} .big-card.blue .num{color:var(--sd-blue-dark);}
+  .big-card.dark{border-top-color:var(--sd-black);} .big-card.dark .num{color:var(--sd-black);}
+  .section{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:1.8rem;margin-bottom:1.5rem;}
+  .section.bordered{border-left:5px solid var(--sd-red);}
+  .section.bordered-gold{border-left:5px solid var(--sd-gold);}
+  .section.bordered-blue{border-left:5px solid var(--sd-blue);}
+  .section.bordered-black{border-left:5px solid var(--sd-black);}
+  .section h2{font-size:1.2rem;font-weight:700;margin-bottom:.15rem;color:var(--sd-blue-dark);}
+  .section .lead{font-size:.93rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.55;}
+  .section h3{font-size:1rem;font-weight:600;margin:1.2rem 0 .5rem;color:var(--sd-black);}
+  .chart-wide{position:relative;height:300px;margin:1rem 0;}
+  .chart-half{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .chart-box{position:relative;height:280px;}
+  @media(max-width:700px){.chart-half{grid-template-columns:1fr;}}
+  .traffic{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  @media(max-width:600px){.traffic{grid-template-columns:1fr;}}
+  .tl{border-radius:12px;padding:1.05rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;}
+  .tl .dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;margin-top:2px;}
+  .tl .dot.red{background:var(--red);} .tl .dot.amber{background:var(--amber);}
+  .tl .dot.green{background:var(--green);} .tl .dot.blue{background:var(--sd-blue);} .tl .dot.gold{background:var(--sd-gold);}
+  .tl .info{font-size:.88rem;line-height:1.5;}
+  .tl .info strong{display:block;font-size:.95rem;margin-bottom:.15rem;color:var(--text);}
+  .tl-red{background:#fef2f2;border:1px solid #fecaca;}
+  .tl-amber{background:#fffbeb;border:1px solid #fde68a;}
+  .tl-green{background:#f0fdf4;border:1px solid #bbf7d0;}
+  .tl-blue{background:#eff8fd;border:1px solid #bae0f3;}
+  .tl-gold{background:#fff8e8;border:1px solid #f6e0a6;}
+  .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0;}
+  @media(max-width:800px){.actions{grid-template-columns:1fr;}}
+  .action-box{border-radius:12px;padding:1.3rem;}
+  .action-box h4{font-size:.95rem;font-weight:700;margin-bottom:.5rem;}
+  .action-box p{font-size:.86rem;line-height:1.55;}
+  .action-box.ops{background:#eff8fd;border:1px solid #bae0f3;} .action-box.ops h4{color:var(--sd-blue-dark);}
+  .action-box.res{background:#f0fdf4;border:1px solid #bbf7d0;} .action-box.res h4{color:#15803d;}
+  .action-box.perf{background:#fff8e8;border:1px solid #f6e0a6;} .action-box.perf h4{color:#92400e;}
+  .simple-table{width:100%;border-collapse:collapse;font-size:.88rem;margin:1rem 0;}
+  .simple-table th,.simple-table td{padding:.7rem .8rem;text-align:left;border-bottom:1px solid var(--border);}
+  .simple-table th{background:#fbf3e3;font-weight:600;color:var(--sd-red-dark);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;}
+  .simple-table tr:hover td{background:#fdfbf7;}
+  .pill{display:inline-block;padding:.2rem .65rem;border-radius:20px;font-size:.74rem;font-weight:600;}
+  .pill-red{background:#fef2f2;color:#991b1b;} .pill-amber{background:#fef3c7;color:#92400e;}
+  .pill-green{background:#dcfce7;color:#166534;} .pill-blue{background:#e1f1fb;color:var(--sd-blue-dark);} .pill-gold{background:#fdedc7;color:#8a5a00;}
+  .callout{background:linear-gradient(135deg,#fef2f2,#fff1f2);border:1px solid #fecaca;border-radius:12px;padding:1.3rem;margin:1.2rem 0;text-align:center;}
+  .callout .big{font-size:1.8rem;font-weight:800;color:var(--sd-red);}
+  .callout p{font-size:.92rem;margin-top:.3rem;color:var(--text);}
+  .callout-gold{background:linear-gradient(135deg,#fff8e8,#fffaf0);border:1px solid #f6e0a6;} .callout-gold .big{color:var(--sd-gold-dark);}
+  .callout-blue{background:linear-gradient(135deg,#eff8fd,#f0fbff);border:1px solid #bae0f3;} .callout-blue .big{color:var(--sd-blue-dark);}
+  .sd-footer-stripe{height:5px;display:flex;} .sd-footer-stripe span{flex:1;}
+  .sd-footer-text{text-align:center;padding:1.4rem 1rem 2rem;color:var(--muted);font-size:.8rem;}
+  .sd-footer-text strong{color:var(--sd-red-dark);}
+</style>
+</head>
+<body>
+
+<header class="sd-header">
+  <div class="sd-header-inner">
+    <div class="sd-crest" aria-label="Sandaun crest">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <polygon id="sdstar" points="0,-3 0.7,-0.95 2.85,-0.95 1.1,0.35 1.75,2.4 0,1.15 -1.75,2.4 -1.1,0.35 -2.85,-0.95 -0.7,-0.95" fill="#ffffff"/>
+        </defs>
+        <polygon points="0,0 100,0 0,100" fill="#1A1A1A"/>
+        <polygon points="100,0 100,100 0,100" fill="#D62027"/>
+        <g stroke="#F4A800" stroke-width="2.6" stroke-linecap="round">
+          <line x1="32" y1="44" x2="32" y2="24"/><line x1="32" y1="44" x2="19" y2="30"/>
+          <line x1="32" y1="44" x2="45" y2="30"/><line x1="32" y1="44" x2="13" y2="40"/>
+          <line x1="32" y1="44" x2="51" y2="40"/>
+        </g>
+        <circle cx="32" cy="45" r="10" fill="#1C8FD1" stroke="#F4A800" stroke-width="2.2"/>
+        <use href="#sdstar" x="52" y="11"/><use href="#sdstar" x="66" y="17"/><use href="#sdstar" x="80" y="10"/>
+        <use href="#sdstar" x="58" y="27"/><use href="#sdstar" x="46" y="14"/><use href="#sdstar" x="73" y="26"/>
+        <g fill="none" stroke="#FCD116" stroke-width="2.4" stroke-linecap="round">
+          <path d="M64 84 q11 -2 20 -15"/><path d="M64 84 q13 1 22 -8"/><path d="M64 84 q12 5 23 -1"/>
+        </g>
+        <circle cx="62" cy="84" r="4.3" fill="#FCD116"/>
+        <path d="M58 82.5 l-6 -1 l6 -2.4 z" fill="#FCD116"/>
+      </svg>
+    </div>
+    <div class="sd-titleblock">
+      <div class="sd-eyebrow">Sandaun Province &middot; Department of Education</div>
+      <div class="sd-title">Dashboard Title</div>
+      <div class="sd-subtitle">Short descriptor</div>
+      <div class="sd-meta">524 schools &bull; 89,730 students &bull; 4 districts &bull; 2025 census</div>
+    </div>
+  </div>
+</header>
+<div class="sd-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+
+<div class="container">
+
+  <div class="big-cards">
+    <div class="big-card"><div class="num">0</div><div class="label">KPI label</div></div>
+    <div class="big-card accent"><div class="num">0</div><div class="label">KPI label</div></div>
+    <div class="big-card blue"><div class="num">0</div><div class="label">KPI label</div></div>
+    <div class="big-card warn"><div class="num">0</div><div class="label">KPI label</div></div>
+  </div>
+
+  <div class="section bordered">
+    <h2>Section heading</h2>
+    <p class="lead">Lead paragraph that frames the question this section answers.</p>
+    <div class="chart-wide"><canvas id="chart1"></canvas></div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="sd-footer-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+  <div class="sd-footer-text">
+    <strong>Sandaun Education</strong> &middot; Dashboard &middot; 2025 Annual School Census<br>
+    <span style="font-size:.72rem;">Source: PNG NDoE 2025 Annual School Census, Sandaun (West Sepik) rows.</span>
+  </div>
+</footer>
+
+<script>
+const SD = {
+  gold:'#F4A800', goldDark:'#B97400', orange:'#E0651E',
+  red:'#D62027', redDark:'#8E1418', blue:'#1C8FD1', blueDark:'#0B5C8A',
+  black:'#1A1A1A', pngGold:'#FCD116',
+  green:'#16a34a', amber:'#d97706', alertRed:'#dc2626',
+  teal:'#0d9488', pink:'#ec4899', grey:'#94a3b8'
+};
+SD.series = [SD.gold, SD.blue, SD.red, SD.teal, SD.orange, SD.pink, SD.grey];
+
+Chart.defaults.font.family = "'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size = 13;
+Chart.defaults.color = '#101828';
+Chart.defaults.plugins.legend.display = false;
+
+// Example chart
+new Chart(document.getElementById('chart1'),{
+  type:'bar',
+  data:{labels:['A','B','C'],datasets:[{data:[10,20,30],backgroundColor:SD.series,borderRadius:6}]},
+  options:{responsive:true,maintainAspectRatio:false}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sandaun — Telefomin Deep Dive</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --sd-gold:#F4A800;--sd-gold-dark:#B97400;--sd-orange:#E0651E;
+    --sd-red:#D62027;--sd-red-dark:#8E1418;
+    --sd-blue:#1C8FD1;--sd-blue-dark:#0B5C8A;
+    --sd-black:#1A1A1A;--sd-white:#FFFFFF;--png-gold:#FCD116;
+    --green:#16a34a;--amber:#d97706;--red:#dc2626;--teal:#0d9488;--pink:#ec4899;
+    --bg:#faf7f2;--card:#fff;--text:#101828;--muted:#6b7280;--border:#e7e2d9;
+    --shadow:0 2px 10px rgba(120,60,0,.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;}
+  .sd-header{position:relative;color:#fff;padding:1.8rem 1.5rem 5.5rem;overflow:hidden;text-shadow:0 1px 3px rgba(0,0,0,.35);
+    background:linear-gradient(135deg,#E0651E 0%,#C2410C 34%,#8E1418 58%,#3A1410 80%,#1A1A1A 100%);}
+  .sd-header::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(circle at 14% 26%,rgba(244,168,0,.55) 0,rgba(244,168,0,0) 38%);}
+  .sd-header::after{content:"";position:absolute;inset:0;opacity:.10;pointer-events:none;
+    background-image:radial-gradient(circle at 70% 22%,#fff 0 1.4px,transparent 2.2px),
+                     radial-gradient(circle at 84% 40%,#fff 0 1px,transparent 1.8px),
+                     radial-gradient(circle at 58% 14%,#fff 0 1.2px,transparent 2px);
+    background-size:240px 240px,200px 200px,300px 300px;}
+  .sd-header-inner{position:relative;max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:1.2rem;}
+  .sd-crest{flex:0 0 auto;width:64px;height:64px;border-radius:10px;background:#fff;padding:6px;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+  .sd-crest svg{width:100%;height:100%;display:block;border-radius:4px;}
+  .sd-titleblock{flex:1;min-width:0;}
+  .sd-eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.9;font-weight:600;}
+  .sd-title{font-size:1.55rem;font-weight:800;line-height:1.2;margin-top:.15rem;}
+  .sd-subtitle{font-size:.95rem;opacity:.92;margin-top:.25rem;}
+  .sd-meta{font-size:.78rem;opacity:.8;margin-top:.4rem;}
+  .sd-stripe{height:6px;display:flex;} .sd-stripe span{flex:1;}
+  .container{max-width:1180px;margin:0 auto;padding:0 1.2rem 2rem;}
+  .big-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:-4rem 0 1.5rem;position:relative;z-index:1;}
+  .big-card{background:var(--card);border-radius:14px;padding:1.4rem 1.2rem;box-shadow:var(--shadow);text-align:center;border-top:4px solid var(--sd-gold);}
+  .big-card .num{font-size:2.1rem;font-weight:800;line-height:1.1;color:var(--sd-gold-dark);}
+  .big-card .label{font-size:.82rem;color:var(--muted);margin-top:.4rem;line-height:1.35;}
+  .big-card.accent{border-top-color:var(--sd-red);} .big-card.accent .num{color:var(--sd-red);}
+  .big-card.good{border-top-color:var(--green);} .big-card.good .num{color:var(--green);}
+  .big-card.warn{border-top-color:var(--amber);} .big-card.warn .num{color:var(--amber);}
+  .big-card.bad{border-top-color:var(--red);} .big-card.bad .num{color:var(--red);}
+  .big-card.blue{border-top-color:var(--sd-blue);} .big-card.blue .num{color:var(--sd-blue-dark);}
+  .big-card.dark{border-top-color:var(--sd-black);} .big-card.dark .num{color:var(--sd-black);}
+  .section{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:1.8rem;margin-bottom:1.5rem;}
+  .section.bordered{border-left:5px solid var(--sd-red);}
+  .section.bordered-gold{border-left:5px solid var(--sd-gold);}
+  .section.bordered-blue{border-left:5px solid var(--sd-blue);}
+  .section.bordered-black{border-left:5px solid var(--sd-black);}
+  .section h2{font-size:1.2rem;font-weight:700;margin-bottom:.15rem;color:var(--sd-blue-dark);}
+  .section .lead{font-size:.93rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.55;}
+  .section h3{font-size:1rem;font-weight:600;margin:1.2rem 0 .5rem;color:var(--sd-black);}
+  .chart-wide{position:relative;height:320px;margin:1rem 0;}
+  .chart-half{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .chart-box{position:relative;height:300px;}
+  @media(max-width:700px){.chart-half{grid-template-columns:1fr;}}
+  .traffic{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  @media(max-width:600px){.traffic{grid-template-columns:1fr;}}
+  .tl{border-radius:12px;padding:1.05rem 1.2rem;display:flex;align-items:flex-start;gap:1rem;}
+  .tl .dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;margin-top:2px;}
+  .tl .dot.red{background:var(--red);} .tl .dot.amber{background:var(--amber);}
+  .tl .dot.green{background:var(--green);} .tl .dot.blue{background:var(--sd-blue);} .tl .dot.gold{background:var(--sd-gold);}
+  .tl .info{font-size:.88rem;line-height:1.5;}
+  .tl .info strong{display:block;font-size:.95rem;margin-bottom:.15rem;color:var(--text);}
+  .tl-red{background:#fef2f2;border:1px solid #fecaca;}
+  .tl-amber{background:#fffbeb;border:1px solid #fde68a;}
+  .tl-green{background:#f0fdf4;border:1px solid #bbf7d0;}
+  .tl-blue{background:#eff8fd;border:1px solid #bae0f3;}
+  .tl-gold{background:#fff8e8;border:1px solid #f6e0a6;}
+  .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0;}
+  @media(max-width:800px){.actions{grid-template-columns:1fr;}}
+  .action-box{border-radius:12px;padding:1.3rem;}
+  .action-box h4{font-size:.95rem;font-weight:700;margin-bottom:.5rem;}
+  .action-box p{font-size:.86rem;line-height:1.55;}
+  .action-box.ops{background:#eff8fd;border:1px solid #bae0f3;} .action-box.ops h4{color:var(--sd-blue-dark);}
+  .action-box.res{background:#f0fdf4;border:1px solid #bbf7d0;} .action-box.res h4{color:#15803d;}
+  .action-box.perf{background:#fff8e8;border:1px solid #f6e0a6;} .action-box.perf h4{color:#92400e;}
+  .simple-table{width:100%;border-collapse:collapse;font-size:.88rem;margin:1rem 0;}
+  .simple-table th,.simple-table td{padding:.7rem .8rem;text-align:left;border-bottom:1px solid var(--border);}
+  .simple-table th{background:#fbf3e3;font-weight:600;color:var(--sd-red-dark);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;}
+  .simple-table tr:hover td{background:#fdfbf7;}
+  .simple-table td.r,.simple-table th.r{text-align:right;}
+  .pill{display:inline-block;padding:.2rem .65rem;border-radius:20px;font-size:.74rem;font-weight:600;}
+  .pill-red{background:#fef2f2;color:#991b1b;} .pill-amber{background:#fef3c7;color:#92400e;}
+  .pill-green{background:#dcfce7;color:#166534;} .pill-blue{background:#e1f1fb;color:var(--sd-blue-dark);} .pill-gold{background:#fdedc7;color:#8a5a00;}
+  .callout{background:linear-gradient(135deg,#fef2f2,#fff1f2);border:1px solid #fecaca;border-radius:12px;padding:1.3rem;margin:1.2rem 0;text-align:center;}
+  .callout .big{font-size:1.8rem;font-weight:800;color:var(--sd-red);}
+  .callout p{font-size:.92rem;margin-top:.3rem;color:var(--text);}
+  .callout-gold{background:linear-gradient(135deg,#fff8e8,#fffaf0);border:1px solid #f6e0a6;} .callout-gold .big{color:var(--sd-gold-dark);}
+  .callout-blue{background:linear-gradient(135deg,#eff8fd,#f0fbff);border:1px solid #bae0f3;} .callout-blue .big{color:var(--sd-blue-dark);}
+  .nav-links{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 0;}
+  .nav-links a{font-size:.8rem;text-decoration:none;color:var(--sd-blue-dark);background:#eef6fb;border:1px solid #cfe6f4;border-radius:20px;padding:.3rem .8rem;font-weight:600;}
+  .nav-links a:hover{background:#dcedf7;}
+  .sd-footer-stripe{height:5px;display:flex;} .sd-footer-stripe span{flex:1;}
+  .sd-footer-text{text-align:center;padding:1.4rem 1rem 2rem;color:var(--muted);font-size:.8rem;}
+  .sd-footer-text strong{color:var(--sd-red-dark);}
+</style>
+</head>
+<body>
+
+<header class="sd-header">
+  <div class="sd-header-inner">
+    <div class="sd-crest" aria-label="Sandaun crest">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <polygon id="sdstar" points="0,-3 0.7,-0.95 2.85,-0.95 1.1,0.35 1.75,2.4 0,1.15 -1.75,2.4 -1.1,0.35 -2.85,-0.95 -0.7,-0.95" fill="#ffffff"/>
+        </defs>
+        <polygon points="0,0 100,0 0,100" fill="#1A1A1A"/>
+        <polygon points="100,0 100,100 0,100" fill="#D62027"/>
+        <g stroke="#F4A800" stroke-width="2.6" stroke-linecap="round">
+          <line x1="32" y1="44" x2="32" y2="24"/><line x1="32" y1="44" x2="19" y2="30"/>
+          <line x1="32" y1="44" x2="45" y2="30"/><line x1="32" y1="44" x2="13" y2="40"/>
+          <line x1="32" y1="44" x2="51" y2="40"/>
+        </g>
+        <circle cx="32" cy="45" r="10" fill="#1C8FD1" stroke="#F4A800" stroke-width="2.2"/>
+        <use href="#sdstar" x="52" y="11"/><use href="#sdstar" x="66" y="17"/><use href="#sdstar" x="80" y="10"/>
+        <use href="#sdstar" x="58" y="27"/><use href="#sdstar" x="46" y="14"/><use href="#sdstar" x="73" y="26"/>
+        <g fill="none" stroke="#FCD116" stroke-width="2.4" stroke-linecap="round">
+          <path d="M64 84 q11 -2 20 -15"/><path d="M64 84 q13 1 22 -8"/><path d="M64 84 q12 5 23 -1"/>
+        </g>
+        <circle cx="62" cy="84" r="4.3" fill="#FCD116"/>
+        <path d="M58 82.5 l-6 -1 l6 -2.4 z" fill="#FCD116"/>
+      </svg>
+    </div>
+    <div class="sd-titleblock">
+      <div class="sd-eyebrow">Sandaun Province &middot; Department of Education</div>
+      <div class="sd-title">Telefomin District</div>
+      <div class="sd-subtitle">Remote highlands &mdash; staffing ratios look good, but girls fall away worst of all and female teachers are scarce; a gender-and-housing agenda</div>
+      <div class="sd-meta">524 schools &bull; 89,730 students &bull; 4 districts &bull; 2025 census</div>
+    </div>
+  </div>
+</header>
+<div class="sd-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+
+<div class="container">
+
+  <div class="big-cards">
+    <div class="big-card"><div class="num">97</div><div class="label">Schools in Telefomin</div></div>
+    <div class="big-card accent"><div class="num">12,413</div><div class="label">Students enrolled (Prep&ndash;Grade 8)</div></div>
+    <div class="big-card good"><div class="num">31.8</div><div class="label">Median pupil&ndash;teacher ratio (best in province)</div></div>
+    <div class="big-card bad"><div class="num">0.65</div><div class="label">Grade 8 gender parity (worst in province)</div></div>
+  </div>
+
+  <!-- NAV -->
+  <div class="section bordered-gold">
+    <h2>Why Telefomin is the gender story</h2>
+    <p class="lead">Telefomin is the remote highlands district, and on paper its staffing looks healthy &mdash; the lowest median pupil&ndash;teacher ratio in the province (31.8) and the lowest overall risk (average 2.05). But those headline numbers hide the real problem: girls fall away worse than anywhere else in Sandaun, parity at Grade 8 collapses to 0.65, and only 28% of teachers are female &mdash; the fewest in the province. For Telefomin the agenda is gender and housing, not pupil&ndash;teacher ratios.</p>
+    <div class="nav-links">
+      <a href="Sandaun_Executive_Dashboard.html">&uarr; Executive</a>
+      <a href="Sandaun_Aitape_Lumi_Deep_Dive.html">Aitape/Lumi &rarr;</a>
+      <a href="Sandaun_Nuku_Deep_Dive.html">Nuku &rarr;</a>
+      <a href="Sandaun_Vanimo_Green_River_Deep_Dive.html">Vanimo/Green River &rarr;</a>
+      <a href="Sandaun_School_Risk_Index.html">School risk index &rarr;</a>
+    </div>
+  </div>
+
+  <!-- ENROLMENT -->
+  <div class="section bordered-blue">
+    <h2>How many children, and in which grades?</h2>
+    <p class="lead">Telefomin is the smallest district by enrolment. The early grades hold up reasonably, but the upper-primary cliff is severe &mdash; enrolment more than halves between Grade 6 (1,034) and Grade 7 (454), the steepest upper-grade collapse in the province.</p>
+    <div class="chart-wide"><canvas id="gradeBars"></canvas></div>
+  </div>
+
+  <!-- TRANSITION -->
+  <div class="section bordered">
+    <h2>Where do children leave between grades?</h2>
+    <p class="lead">Each bar is the share of one grade&rsquo;s children who appear in the next grade. The Grade 2&rarr;Grade 3 step is highlighted in red (69%), but the truly alarming bar is Grade 6&rarr;Grade 7, where only 44% carry forward &mdash; a near-total upper-grade collapse that drives the gender gap.</p>
+    <div class="callout"><div class="big">G2&rarr;G3 = 69%</div><p>585 children lost between Grade 2 (1,888) and Grade 3 (1,303). But the steeper cliff is later: only 44% of Grade 6 children reach Grade 7.</p></div>
+    <div class="chart-wide"><canvas id="transBars"></canvas></div>
+    <p style="font-size:.82rem;color:var(--muted);margin-top:.4rem;">The G7&rarr;G8 bar above 100% is a synthetic-cohort artefact &mdash; re-entry, repetition or in-migration recorded in a single census year &mdash; not real growth.</p>
+  </div>
+
+  <!-- GPI -->
+  <div class="section bordered-gold">
+    <h2>Do girls keep pace as grades rise?</h2>
+    <p class="lead">This is the heart of the Telefomin story. Parity is near balance in the early grades but plunges to 0.65 by Grade 8 &mdash; the worst Grade 8 gender parity in the province. Girls are not just dropping out with everyone; they are dropping out faster than boys at exactly the upper-grade point where the cohort thins.</p>
+    <div class="chart-wide"><canvas id="gpiLine"></canvas></div>
+  </div>
+
+  <!-- INFRASTRUCTURE / TEACHER SNAPSHOT -->
+  <div class="section bordered-black">
+    <h2>What does the staffing-and-housing picture show?</h2>
+    <p class="lead">Telefomin&rsquo;s ratios and overall risk are the best in the province, but its female-teacher share is the worst and 44% of its schools have no staff house &mdash; the highest share in Sandaun. The snapshot below reads against province benchmarks.</p>
+    <div class="chart-wide"><canvas id="snapBars"></canvas></div>
+    <div class="traffic">
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Female teachers: 28% (lowest in province)</strong>Barely one teacher in four is female &mdash; the weakest base in Sandaun for keeping girls in school and the clearest lever for the gender gap.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Housing: 41 schools with none &mdash; 44% of schools</strong>The highest share of zero-house schools in the province. A 134-house gap blocks the posting of female teachers to remote schools.</div></div>
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Lowest overall risk &mdash; 32 schools at 3+ flags</strong>Average risk score 2.05, the lowest in the province. The structural base is sound; the problem is people, not buildings count alone.</div></div>
+      <div class="tl tl-amber"><div class="dot amber"></div><div class="info"><strong>Bush classrooms: 31%</strong>Roughly a third of rooms are bush material &mdash; above the province average but well short of Nuku&rsquo;s worst case.</div></div>
+    </div>
+  </div>
+
+  <!-- STORY TRAFFIC LIGHT -->
+  <div class="section bordered-gold">
+    <h2>The Telefomin story in three lights</h2>
+    <p class="lead">Low pupil&ndash;teacher ratios and lowest overall risk, but the worst Grade 8 gender parity in the province and the fewest female teachers; the priority is recruiting and housing female teachers and keeping girls past Grade 6.</p>
+    <div class="traffic">
+      <div class="tl tl-green"><div class="dot green"></div><div class="info"><strong>Green &mdash; staffing ratios and risk</strong>Best median PTR in the province (31.8) and lowest average risk (2.05). On the structural measures, Telefomin is in the strongest position.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Red &mdash; the worst gender gap</strong>GPI of 0.65 at Grade 8, the worst in Sandaun, with the upper-grade cohort collapsing at G6&rarr;G7 (44%). This is the outcome that defines the district.</div></div>
+      <div class="tl tl-red"><div class="dot red"></div><div class="info"><strong>Red &mdash; female teachers and houses</strong>Only 28% female teachers (lowest) and 44% of schools with no staff house (highest share). The two are linked &mdash; no house, no female posting, no role models for girls.</div></div>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="section bordered-blue">
+    <h2>Priority actions for Telefomin in 2026</h2>
+    <p class="lead">A gender-and-housing agenda: recruit and house female teachers, and hold girls past Grade 6.</p>
+    <div class="actions">
+      <div class="action-box ops"><h4>Operations &mdash; recruit female teachers</h4><p>Set a recruitment and posting target to lift the female-teacher share above 28%. Pair every female posting with secured housing at remote schools so the posting holds.</p></div>
+      <div class="action-box res"><h4>Resources &mdash; house the teachers</h4><p>Close the 134-house gap, prioritising the 41 schools with no staff house at all. Housing is the precondition for posting female teachers into the highlands.</p></div>
+      <div class="action-box perf"><h4>Performance &mdash; keep girls past G6</h4><p>Track GPI by grade and the G6&rarr;G7 transition (44%) as the headline outcome. Report retention of girls to Grade 8 each year &mdash; the measure that matters most here.</p></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="sd-footer-stripe"><span style="background:#F4A800"></span><span style="background:#D62027"></span><span style="background:#1A1A1A"></span></div>
+  <div class="sd-footer-text">
+    <strong>Sandaun Education &middot; Telefomin Deep Dive</strong> &middot; 2025 Annual School Census<br>
+    <span style="font-size:.72rem;">Source: PNG NDoE 2025 Annual School Census, Sandaun (West Sepik) rows. Transition and parity are synthetic-cohort estimates from a single census year, not tracked cohorts.</span>
+  </div>
+</footer>
+
+<script>
+const SD = {
+  gold:'#F4A800', goldDark:'#B97400', orange:'#E0651E',
+  red:'#D62027', redDark:'#8E1418', blue:'#1C8FD1', blueDark:'#0B5C8A',
+  black:'#1A1A1A', pngGold:'#FCD116',
+  green:'#16a34a', amber:'#d97706', alertRed:'#dc2626',
+  teal:'#0d9488', pink:'#ec4899', grey:'#94a3b8'
+};
+SD.series = [SD.gold, SD.blue, SD.red, SD.teal, SD.orange, SD.pink, SD.grey];
+Chart.defaults.font.family = "'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size = 13;
+Chart.defaults.color = '#101828';
+Chart.defaults.plugins.legend.display = false;
+
+const grades = ['Prep','G1','G2','G3','G4','G5','G6','G7','G8'];
+const enrol = [2640,2201,1888,1303,1239,1124,1034,454,530];
+
+// Enrolment by grade
+new Chart(document.getElementById('gradeBars'),{
+  type:'bar',
+  data:{labels:grades,datasets:[{label:'Students',data:enrol,backgroundColor:SD.blue,borderRadius:5}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Enrolment by grade — Telefomin (12,413 students)',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.y.toLocaleString()+' students'}}},
+    scales:{x:{grid:{display:false}},y:{ticks:{callback:v=>v.toLocaleString()}}}}
+});
+
+// Transition bars — G2->G3 highlighted red
+const boundaries=['Prep→G1','G1→G2','G2→G3','G3→G4','G4→G5','G5→G6','G6→G7','G7→G8'];
+const trans=[83.4,85.8,69.0,95.1,90.7,92.0,43.9,116.7];
+const transColors=trans.map((v,i)=>i===2?SD.red:(v<90?SD.amber:SD.green));
+new Chart(document.getElementById('transBars'),{
+  type:'bar',
+  data:{labels:boundaries,datasets:[{data:trans,backgroundColor:transColors,borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{title:{display:true,text:'Grade-to-grade transition (%) — G2→G3 in red (69%); note G6→G7 collapse (44%)',font:{size:13,weight:'bold'}},
+      tooltip:{callbacks:{label:c=>c.parsed.y.toFixed(1)+'% carry forward'}}},
+    scales:{y:{suggestedMax:125,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}
+});
+
+// GPI line + faint province reference
+const gpi=[0.91,0.99,0.989,0.922,0.833,0.925,0.747,0.876,0.646];
+const gpiProv=[0.94,0.892,0.894,0.88,0.855,0.883,0.845,0.85,0.79];
+new Chart(document.getElementById('gpiLine'),{
+  type:'line',
+  data:{labels:grades,datasets:[
+    {label:'Telefomin GPI',data:gpi,borderColor:SD.red,backgroundColor:'rgba(214,32,39,.08)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:SD.red},
+    {label:'Province',data:gpiProv,borderColor:SD.grey,borderDash:[5,4],borderWidth:1.5,fill:false,tension:.3,pointRadius:0}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'bottom'},
+      title:{display:true,text:'Gender parity index by grade (1.0 = equal) — falls to 0.65 at G8 (worst in province)',font:{size:13,weight:'bold'}}},
+    scales:{y:{min:0.6,max:1.05,ticks:{callback:v=>v.toFixed(2)}},x:{grid:{display:false}}}}
+});
+
+// Infrastructure / teacher snapshot vs province
+new Chart(document.getElementById('snapBars'),{
+  type:'bar',
+  data:{labels:['Bush classrooms %','Female teachers %','Schools at 3+ risk flags','Zero-house schools'],
+    datasets:[
+      {label:'Telefomin',data:[31,28,32,41],backgroundColor:SD.gold,borderRadius:5},
+      {label:'Province benchmark',data:[26,40,null,null],backgroundColor:SD.grey,borderRadius:5}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'bottom'},
+      title:{display:true,text:'Infrastructure & teacher snapshot (count or %)',font:{size:13,weight:'bold'}}},
+    scales:{y:{grid:{display:false}},x:{grid:{display:false}}}}
+});
+</script>
+</body>
+</html>
